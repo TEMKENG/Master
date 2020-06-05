@@ -1,0 +1,116 @@
+-- VHDL data flow description generated from `controller_boom`
+--		date : Fri Jun  5 10:12:42 2020
+
+
+-- Entity Declaration
+
+ENTITY controller_boom IS
+  PORT (
+  clk : in BIT;	-- clk
+  reset : in BIT;	-- reset
+  ir : in bit_vector(15 DOWNTO 0) ;	-- ir
+  ready : in BIT;	-- ready
+  zero : in BIT;	-- zero
+  c_reg_ldmem : out BIT;	-- c_reg_ldmem
+  c_reg_ldi : out BIT;	-- c_reg_ldi
+  c_regfile_load_lo : out BIT;	-- c_regfile_load_lo
+  c_regfile_load_hi : out BIT;	-- c_regfile_load_hi
+  c_pc_load : out BIT;	-- c_pc_load
+  c_pc_inc : out BIT;	-- c_pc_inc
+  c_ir_load : out BIT;	-- c_ir_load
+  c_mem_rd : out BIT;	-- c_mem_rd
+  c_mem_wr : out BIT;	-- c_mem_wr
+  c_adr_pc_not_reg : out BIT;	-- c_adr_pc_not_reg
+  vdd : in BIT;	-- vdd
+  vss : in BIT	-- vss
+  );
+END controller_boom;
+
+
+-- Architecture Declaration
+
+ARCHITECTURE behaviour_data_flow OF controller_boom IS
+  SIGNAL state : REG_VECTOR(0 TO 3) REGISTER;	-- state
+  SIGNAL aux0 : BIT;		-- aux0
+  SIGNAL aux2 : BIT;		-- aux2
+  SIGNAL aux3 : BIT;		-- aux3
+  SIGNAL aux4 : BIT;		-- aux4
+  SIGNAL aux6 : BIT;		-- aux6
+  SIGNAL aux7 : BIT;		-- aux7
+  SIGNAL aux8 : BIT;		-- aux8
+  SIGNAL aux10 : BIT;		-- aux10
+  SIGNAL aux11 : BIT;		-- aux11
+  SIGNAL aux12 : BIT;		-- aux12
+  SIGNAL aux13 : BIT;		-- aux13
+  SIGNAL aux14 : BIT;		-- aux14
+  SIGNAL aux15 : BIT;		-- aux15
+
+BEGIN
+  aux15 <= (state(2) OR ir(14));
+  aux14 <= (state(1) AND NOT(state(3)));
+  aux13 <= (NOT(state(1)) AND NOT(state(3)));
+  aux12 <= (NOT(reset) AND state(0));
+  aux11 <= NOT(NOT(ir(15)) AND ir(12));
+  aux10 <= (ir(11) XOR (NOT(zero) AND ir(12)));
+  aux8 <= (NOT(reset) AND NOT(state(2)));
+  aux7 <= (NOT(state(0)) AND state(2));
+  aux6 <= ((aux3 AND NOT(state(1))) AND state(3));
+  aux4 <= (aux3 AND state(1));
+  aux3 <= (state(0) AND NOT(state(2)));
+  aux2 <= ((aux0 AND state(1)) AND NOT(state(3)));
+  aux0 <= (NOT(state(0)) AND NOT(state(2)));
+  label0 : BLOCK ((NOT((clk'STABLE)) AND clk) = '1')
+  BEGIN
+    state (3) <= GUARDED ((NOT(state(0)) OR NOT(state(3)) OR NOT(ready)) 
+AND ((((NOT(aux11) AND state(0) AND ir(14)) OR (
+ir(15) AND NOT(aux10) AND state(0) AND NOT(ir(14)))) 
+AND state(1)) OR state(3)) AND aux8);
+  END BLOCK label0;
+  label1 : BLOCK ((NOT((clk'STABLE)) AND clk) = '1')
+  BEGIN
+    state (2) <= GUARDED ((((aux11 OR state(2)) AND aux12 AND ir(14)) OR (
+(NOT(ir(15)) OR (ir(11) XOR zero) OR NOT(ir(12)) 
+OR state(2)) AND aux12 AND NOT(ir(14)))) AND aux14);
+  END BLOCK label1;
+  label2 : BLOCK ((NOT((clk'STABLE)) AND clk) = '1')
+  BEGIN
+    state (1) <= GUARDED ((((aux8 AND state(1) AND state(3)) OR (aux12 AND
+ NOT(state(2)) AND aux13)) AND NOT(ready)) OR (((
+ir(15) AND ir(11) AND NOT(ir(12))) OR aux15) AND (
+ir(15) OR ir(11) OR state(2)) AND aux12 AND aux14) OR (
+NOT(reset) AND NOT(state(0)) AND NOT(state(2)) AND 
+state(1)));
+  END BLOCK label2;
+  label3 : BLOCK ((NOT((clk'STABLE)) AND clk) = '1')
+  BEGIN
+    state (0) <= GUARDED (((aux12 OR NOT(state(1))) AND NOT(reset) AND (
+state(0) XOR state(2)) AND state(3)) OR ((((aux10 OR 
+aux15) AND (((ir(15) OR (NOT(ir(11)) AND NOT(ir(12))))
+ AND state(0)) OR state(2)) AND NOT(reset) AND 
+state(1)) OR (NOT(reset) AND NOT(aux3) AND NOT(state(1)))
+) AND NOT(state(3))) OR ((aux0 OR NOT(state(1))) 
+AND NOT(reset) AND NOT(state(3)) AND ready) OR (aux8
+ AND state(3) AND NOT(ready)));
+  END BLOCK label3;
+
+c_adr_pc_not_reg <= aux2;
+
+c_mem_wr <= (aux4 AND state(3));
+
+c_mem_rd <= (aux6 OR aux2);
+
+c_ir_load <= aux2;
+
+c_pc_inc <= (aux4 AND NOT(state(3)));
+
+c_pc_load <= (aux7 AND NOT(state(1)) AND state(3));
+
+c_regfile_load_hi <= (aux6 OR (aux7 AND NOT(state(3))));
+
+c_regfile_load_lo <= (aux6 OR (state(2) AND aux13));
+
+c_reg_ldi <= (((aux7 AND state(1)) OR (state(0) AND state(2) 
+AND NOT(state(1)))) AND NOT(state(3)));
+
+c_reg_ldmem <= aux6;
+END;

@@ -1,0 +1,127 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{beramono}% monospaced font with bold variant
+\usepackage[pdftex]{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{color}
+
+\lstdefinelanguage{VHDL}{
+	morekeywords={
+		library,use,all,entity,is,port,in,out,end,architecture,of,
+		begin,and
+	},
+	morecomment=[l]--
+}
+
+\lstdefinelanguage{ASSEMBLER}{
+	morekeywords={
+		add, sub, sal, sar, and:, or, xor, not, ld, st, jmp, halt, jz, jnz, org, data, data, end,start
+	},
+	morecomment=[l];
+}
+\usepackage{xcolor}
+\colorlet{keyword}{blue!100!black!80}
+\colorlet{comment}{green!90!black!90}
+\lstdefinestyle{vhdl}{
+	language     = VHDL,
+	basicstyle   = \ttfamily,
+	keywordstyle = \color{keyword}\bfseries,
+	commentstyle = \color{comment}
+}
+
+\lstdefinestyle{assembler}{
+	language     = ASSEMBLER,
+	basicstyle   = \ttfamily,
+	keywordstyle = \color{keyword}\bfseries,
+	commentstyle = \color{comment}
+}
+\usepackage[margin=0.5in]{geometry}
+\begin{document}
+	\begin{center}
+		
+	\Huge
+	Hardware-Systeme im SoSe 2020 Protokoll \\zum Praktikum	\\
+	\vspace{1cm}
+	\textbf{VISCY-Prozessor- Teil 3}
+	\vspace{10cm}
+	\begin{table*}[h!]
+		\Huge
+		\begin{tabular}{rl}
+			Gruppenmitglieder: & \textbf{V}annessa \textbf{K}emeni \textbf{K}abiwo \\
+							   &\textbf{T}hibaut \textbf{T}EMKENG \\
+							   & \textbf{N}iko \textbf{M}aximiliam \textbf{M}azanec
+		\end{tabular}
+	\end{table*}
+\end{center}
+	
+	\newpage
+	\section{Vollständiges Steuerwerk.}
+		\subsection{Zustandsübergangsdiagramm.}
+			\begin{figure}[h!]
+				\includegraphics[width=1\linewidth,height=0.5\textheight]{images/zustand}
+				\caption{Zustandsdiagramm}
+			\end{figure}
+		\subsection{VHDL Code des Steuerwerks.}
+		\footnotesize
+		\lstinputlisting[style=vhdl]{controller.vhdl}	
+		\subsection{Kommentierter Assembler Code von allen VISCY-CPU Befehlen.}
+			\footnotesize
+			\lstinputlisting[style=assembler]{test_all.asm}
+		\subsection{Screenshot von Gtkwave.}
+				\begin{figure}[h!]
+				\includegraphics[width=\linewidth,height=0.3\textheight]{images/gtkwave_test_all}
+				\caption{Gtkwave vom Befehlssatz}
+			\end{figure}
+		\normalsize
+		Da die Gtkwave-Form nicht übersichtlich ist, haben wir für jede Durchführung von Befehlssatz die Ergebnis in den Speicher angelegt.Für jeder Befehlssatz haben wir eine Label in Assembler-Code gemacht.
+		\subsection{Screenshot des Schaltbildes ('xsch')}
+			\begin{figure}[h!]
+				\includegraphics[width=\columnwidth,height=\textheight]{images/controller_synthese}
+				\caption{Steuerwerk Synthese}
+			\end{figure}
+			\begin{table}[h!]
+				\begin{tabular}{rl}
+					Anzahl Flipflops:& 4\\
+					maximale Verzögerungszeit: &Konsole:2802 ps XSCH: 2235 ps \\
+					
+				\end{tabular}
+			\end{table}
+	\section{IC-Layout}
+		\subsection{Komplettes Chip}
+				\begin{figure}[h!]
+				\includegraphics[width=1\linewidth,height=0.8\textheight]{images/pc_chip_komplett}
+				\caption{Chip Layout}
+			\end{figure}
+		\subsection{Standardzell-Bereich}
+			\begin{figure}[h!]
+			\includegraphics[width=1\linewidth,height=0.45\textheight]{images/nero_1}
+			\includegraphics[width=1.\linewidth,height=0.45\textheight]{images/nero_2}
+			\caption{Standardzell-Bereich}
+		\end{figure}
+		
+	\section{Inbetriebnahme der PCU}
+			\begin{figure}[h!]
+				\includegraphics[width=1.\linewidth,height=0.5\textheight]{images/3-befehle}
+				\caption{Die ersten drei Befehle}
+			\end{figure}
+			\vspace{1cm}
+			\begin{figure}[h!]
+				\includegraphics[width=1.\linewidth,height=0.5\textheight]{images/letzten1.PNG}
+				\includegraphics[width=1.\linewidth,height=0.5\textheight]{images/letzten2.PNG}
+				\caption{Der letzten drei Befehle (inklusive "halt")}
+			\end{figure}
+			\vspace{1cm}
+			\begin{figure}[h!]
+				\includegraphics[width=1.\linewidth,height=0.5\textheight]{images/laden1.PNG}
+				\includegraphics[width=1.\linewidth,height=0.5\textheight]{images/laden2.PNG}
+				\caption{Befehle, die die Quelloperanden aus dem Speicher lesen}
+			\end{figure}
+		\subsection{Statistik}
+
+
+
+
+\end{document}

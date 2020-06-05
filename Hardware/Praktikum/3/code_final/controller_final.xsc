@@ -1,0 +1,221 @@
+N:a2_x2_2_sig:11:981 ps
+N:a2_x2_3_sig:5:497 ps
+N:a2_x2_4_sig:10:955 ps
+N:a2_x2_5_sig:15:1349 ps
+N:a2_x2_6_sig:5:516 ps
+N:a2_x2_7_sig:17:1513 ps
+N:a2_x2_sig:18:1600 ps
+N:a3_x2_2_sig:15:1335 ps
+N:a3_x2_sig:14:1252 ps
+N:an12_x1_2_sig:16:1446 ps
+N:an12_x1_3_sig:14:1286 ps
+N:an12_x1_sig:7:633 ps
+N:ao22_x2_sig:11:1038 ps
+N:aux11:4:418 ps
+N:aux13:9:856 ps
+N:aux2:15:1396 ps
+N:aux6:17:1564 ps
+N:aux8:10:903 ps
+N:c_adr_pc_not_reg:20:1796 ps
+N:c_ir_load:20:1796 ps
+N:c_mem_rd:21:1905 ps
+N:c_mem_wr:20:1778 ps
+N:c_pc_inc:20:1778 ps
+N:c_pc_load:21:1896 ps
+N:c_reg_ldi:25:2235 ps
+N:c_reg_ldmem:22:1964 ps
+N:c_regfile_load_hi:22:1934 ps
+N:c_regfile_load_lo:22:2010 ps
+N:clk:0:0 ps
+N:ir 0:0:0 ps
+N:ir 1:0:0 ps
+N:ir 2:0:0 ps
+N:ir 3:0:0 ps
+N:ir 4:0:0 ps
+N:ir 5:0:0 ps
+N:ir 6:0:0 ps
+N:ir 7:0:0 ps
+N:ir 8:0:0 ps
+N:ir 9:0:0 ps
+N:ir 10:0:0 ps
+N:ir 11:0:0 ps
+N:ir 12:0:0 ps
+N:ir 13:0:0 ps
+N:ir 14:0:0 ps
+N:ir 15:0:0 ps
+N:mbk_buf_not_aux15:17:1513 ps
+N:mbk_buf_not_state 2:13:1203 ps
+N:na2_x1_2_sig:17:1495 ps
+N:na2_x1_3_sig:16:1424 ps
+N:na2_x1_4_sig:4:383 ps
+N:na2_x1_sig:12:1126 ps
+N:na3_x1_2_sig:7:662 ps
+N:na3_x1_3_sig:5:468 ps
+N:na3_x1_4_sig:23:2077 ps
+N:na3_x1_5_sig:19:1708 ps
+N:na3_x1_sig:10:890 ps
+N:nao22_x1_2_sig:19:1676 ps
+N:nao22_x1_3_sig:19:1676 ps
+N:nao22_x1_4_sig:27:2417 ps
+N:nao22_x1_sig:21:1895 ps
+N:no2_x1_2_sig:16:1442 ps
+N:no2_x1_3_sig:16:1442 ps
+N:no2_x1_4_sig:20:1797 ps
+N:no2_x1_sig:4:433 ps
+N:no4_x1_sig:14:1268 ps
+N:noa22_x1_2_sig:22:1953 ps
+N:noa22_x1_3_sig:25:2197 ps
+N:noa22_x1_4_sig:21:1899 ps
+N:noa22_x1_5_sig:19:1741 ps
+N:noa22_x1_sig:24:2159 ps
+N:not_aux0:11:1009 ps
+N:not_aux10:9:822 ps
+N:not_aux12:13:1214 ps
+N:not_aux14:14:1252 ps
+N:not_aux15:12:1089 ps
+N:not_aux3:13:1170 ps
+N:not_aux4:17:1569 ps
+N:not_aux6:19:1733 ps
+N:not_aux7:18:1614 ps
+N:not_ir 11:1:152 ps
+N:not_ir 12:2:184 ps
+N:not_ir 13:0:0 ps
+N:not_ir 14:2:178 ps
+N:not_ir 15:1:160 ps
+N:not_reset:2:178 ps
+N:not_state 0:8:767 ps
+N:not_state 1:9:860 ps
+N:not_state 2:8:747 ps
+N:not_state 3:9:851 ps
+N:nxr2_x1_sig:4:378 ps
+N:o2_x2_2_sig:22:1996 ps
+N:o2_x2_sig:18:1635 ps
+N:o3_x2_2_sig:18:1660 ps
+N:o3_x2_sig:20:1801 ps
+N:oa22_x2_2_sig:18:1582 ps
+N:oa22_x2_sig:32:2802 ps
+N:oa2ao222_x2_sig:26:2316 ps
+N:on12_x1_sig:11:972 ps
+N:ready:0:0 ps
+N:reset:0:0 ps
+N:state 0:6:591 ps
+N:state 1:6:588 ps
+N:state 2:7:624 ps
+N:state 3:7:618 ps
+N:xr2_x1_sig:11:992 ps
+N:zero:0:0 ps
+B:mbk_buf_not_aux15:17:1513 ps
+B:mbk_buf_not_state 2:13:1203 ps
+B:c_reg_ldmem_ins:22:1964 ps
+B:c_reg_ldi_ins:25:2235 ps
+B:o2_x2_2_ins:22:1996 ps
+B:o3_x2_2_ins:18:1660 ps
+B:c_regfile_load_lo_ins:22:2010 ps
+B:c_regfile_load_hi_ins:22:1934 ps
+B:c_pc_load_ins:21:1896 ps
+B:c_pc_inc_ins:20:1778 ps
+B:c_ir_load_ins:20:1796 ps
+B:c_mem_rd_ins:21:1905 ps
+B:c_mem_wr_ins:20:1778 ps
+B:c_adr_pc_not_reg_ins:20:1796 ps
+B:state_0_ins:6:591 ps
+B:oa22_x2_ins:32:2802 ps
+B:oa2ao222_x2_ins:26:2316 ps
+B:a2_x2_7_ins:17:1513 ps
+B:ao22_x2_ins:11:1038 ps
+B:a2_x2_6_ins:5:516 ps
+B:no2_x1_4_ins:20:1797 ps
+B:oa22_x2_2_ins:18:1582 ps
+B:na3_x1_4_ins:23:2077 ps
+B:o3_x2_ins:20:1801 ps
+B:na2_x1_4_ins:4:383 ps
+B:a2_x2_5_ins:15:1349 ps
+B:na3_x1_5_ins:19:1708 ps
+B:na2_x1_3_ins:16:1424 ps
+B:a2_x2_4_ins:10:955 ps
+B:xr2_x1_ins:11:992 ps
+B:na2_x1_2_ins:17:1495 ps
+B:an12_x1_3_ins:14:1286 ps
+B:state_1_ins:6:588 ps
+B:nao22_x1_4_ins:27:2417 ps
+B:noa22_x1_5_ins:19:1741 ps
+B:an12_x1_2_ins:16:1446 ps
+B:a3_x2_2_ins:15:1335 ps
+B:noa22_x1_3_ins:25:2197 ps
+B:on12_x1_ins:11:972 ps
+B:a2_x2_3_ins:5:497 ps
+B:noa22_x1_4_ins:21:1899 ps
+B:na3_x1_3_ins:5:468 ps
+B:o2_x2_ins:18:1635 ps
+B:no4_x1_ins:14:1268 ps
+B:state_2_ins:7:624 ps
+B:noa22_x1_2_ins:22:1953 ps
+B:nao22_x1_3_ins:19:1676 ps
+B:na3_x1_2_ins:7:662 ps
+B:nxr2_x1_ins:4:378 ps
+B:no2_x1_3_ins:16:1442 ps
+B:nao22_x1_2_ins:19:1676 ps
+B:no2_x1_2_ins:16:1442 ps
+B:state_3_ins:7:618 ps
+B:noa22_x1_ins:24:2159 ps
+B:nao22_x1_ins:21:1895 ps
+B:a2_x2_2_ins:11:981 ps
+B:an12_x1_ins:7:633 ps
+B:a2_x2_ins:18:1600 ps
+B:a3_x2_ins:14:1252 ps
+B:na2_x1_ins:12:1126 ps
+B:na3_x1_ins:10:890 ps
+B:aux2_ins:15:1396 ps
+B:aux6_ins:17:1564 ps
+B:aux8_ins:10:903 ps
+B:aux11_ins:4:418 ps
+B:aux13_ins:9:856 ps
+B:not_ir_11_ins:1:152 ps
+B:not_ir_12_ins:2:184 ps
+B:not_ir_14_ins:2:178 ps
+B:not_ir_15_ins:1:160 ps
+B:not_reset_ins:2:178 ps
+B:not_state_0_ins:8:767 ps
+B:not_state_3_ins:9:851 ps
+B:not_aux10_ins:9:822 ps
+B:no2_x1_ins:4:433 ps
+B:not_state_1_ins:9:860 ps
+B:not_state_2_ins:8:747 ps
+B:not_aux12_ins:13:1214 ps
+B:not_aux14_ins:14:1252 ps
+B:not_aux15_ins:12:1089 ps
+B:not_aux3_ins:13:1170 ps
+B:not_aux0_ins:11:1009 ps
+B:not_aux4_ins:17:1569 ps
+B:not_aux6_ins:19:1733 ps
+B:not_aux7_ins:18:1614 ps
+C:c_adr_pc_not_reg:20:1796 ps
+C:c_mem_wr:20:1778 ps
+C:c_mem_rd:21:1905 ps
+C:c_ir_load:20:1796 ps
+C:c_pc_inc:20:1778 ps
+C:c_pc_load:21:1896 ps
+C:c_regfile_load_hi:22:1934 ps
+C:c_regfile_load_lo:22:2010 ps
+C:c_reg_ldi:25:2235 ps
+C:c_reg_ldmem:22:1964 ps
+C:zero:0:0 ps
+C:ready:0:0 ps
+C:ir 0:0:0 ps
+C:ir 1:0:0 ps
+C:ir 2:0:0 ps
+C:ir 3:0:0 ps
+C:ir 4:0:0 ps
+C:ir 5:0:0 ps
+C:ir 6:0:0 ps
+C:ir 7:0:0 ps
+C:ir 8:0:0 ps
+C:ir 9:0:0 ps
+C:ir 10:0:0 ps
+C:ir 11:0:0 ps
+C:ir 12:0:0 ps
+C:ir 13:0:0 ps
+C:ir 14:0:0 ps
+C:ir 15:0:0 ps
+C:reset:0:0 ps
+C:clk:0:0 ps
