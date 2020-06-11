@@ -78,6 +78,6 @@ result:
 	halt
 
 	.org 0x0100
-	.data 40, 2 					;a=(Wert=40 Adresse=0x0100) , b=(Wert=2 Adresse=0x0101)
+	.data 40, 2 				;a=(Wert=40 Adresse=0x0100) , b=(Wert=2 Adresse=0x0101)
 	.res 1						;Speicherplatz fuer Ergebnis reservieren
 	.end

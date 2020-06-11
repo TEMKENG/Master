@@ -47,10 +47,10 @@ begin
 		c_pc_inc <= '0';
 		c_reg_ldmem <= '0';
 		c_reg_ldi <= '0';
+		next_state <= state;
 		
 	--Zustandsabhaengige Belegung
 		-- eingentliche Automaten-Logik
-		next_state <= state;
 		case state is
 			when s_reset =>
 				next_state <= s_if1;

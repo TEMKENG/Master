@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Thu Jun 04 21:10:35 2020
+[*] Wed Jun 10 15:43:21 2020
 [*]
 [dumpfile] "D:\SS20\HSA\Hardware\Praktikum\3\code_final\test.ghw"
-[dumpfile_mtime] "Thu Jun 04 19:33:38 2020"
-[dumpfile_size] 66964
+[dumpfile_mtime] "Wed Jun 10 15:17:54 2020"
+[dumpfile_size] 188826
 [savefile] "D:\SS20\HSA\Hardware\Praktikum\3\code_final\test.save"
 [timestart] 0
 [size] 1531 800
 [pos] -1 -1
-*-30.219280 2825000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-31.939844 7415000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.viscy_cpu_tb.
 [treeopen] top.viscy_cpu_tb.mem_content.
@@ -53,6 +53,7 @@ top.viscy_cpu_tb.uut.viscy_pc.reset
 @22
 #{top.viscy_cpu_tb.mem_content[256][15:0]} top.viscy_cpu_tb.mem_content[256][15] top.viscy_cpu_tb.mem_content[256][14] top.viscy_cpu_tb.mem_content[256][13] top.viscy_cpu_tb.mem_content[256][12] top.viscy_cpu_tb.mem_content[256][11] top.viscy_cpu_tb.mem_content[256][10] top.viscy_cpu_tb.mem_content[256][9] top.viscy_cpu_tb.mem_content[256][8] top.viscy_cpu_tb.mem_content[256][7] top.viscy_cpu_tb.mem_content[256][6] top.viscy_cpu_tb.mem_content[256][5] top.viscy_cpu_tb.mem_content[256][4] top.viscy_cpu_tb.mem_content[256][3] top.viscy_cpu_tb.mem_content[256][2] top.viscy_cpu_tb.mem_content[256][1] top.viscy_cpu_tb.mem_content[256][0]
 #{top.viscy_cpu_tb.mem_content[257][15:0]} top.viscy_cpu_tb.mem_content[257][15] top.viscy_cpu_tb.mem_content[257][14] top.viscy_cpu_tb.mem_content[257][13] top.viscy_cpu_tb.mem_content[257][12] top.viscy_cpu_tb.mem_content[257][11] top.viscy_cpu_tb.mem_content[257][10] top.viscy_cpu_tb.mem_content[257][9] top.viscy_cpu_tb.mem_content[257][8] top.viscy_cpu_tb.mem_content[257][7] top.viscy_cpu_tb.mem_content[257][6] top.viscy_cpu_tb.mem_content[257][5] top.viscy_cpu_tb.mem_content[257][4] top.viscy_cpu_tb.mem_content[257][3] top.viscy_cpu_tb.mem_content[257][2] top.viscy_cpu_tb.mem_content[257][1] top.viscy_cpu_tb.mem_content[257][0]
+@23
 #{top.viscy_cpu_tb.mem_content[258][15:0]} top.viscy_cpu_tb.mem_content[258][15] top.viscy_cpu_tb.mem_content[258][14] top.viscy_cpu_tb.mem_content[258][13] top.viscy_cpu_tb.mem_content[258][12] top.viscy_cpu_tb.mem_content[258][11] top.viscy_cpu_tb.mem_content[258][10] top.viscy_cpu_tb.mem_content[258][9] top.viscy_cpu_tb.mem_content[258][8] top.viscy_cpu_tb.mem_content[258][7] top.viscy_cpu_tb.mem_content[258][6] top.viscy_cpu_tb.mem_content[258][5] top.viscy_cpu_tb.mem_content[258][4] top.viscy_cpu_tb.mem_content[258][3] top.viscy_cpu_tb.mem_content[258][2] top.viscy_cpu_tb.mem_content[258][1] top.viscy_cpu_tb.mem_content[258][0]
 @200
 -REGISTER

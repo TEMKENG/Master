@@ -1,0 +1,52 @@
+======== Aufgabe 1.1 ========
+Hinweise:
+Die Aufgabe bestand aber darin, den Zusammenhang zwischen Sticky-Sessions
+und SPWA darzustellen. Dies wird gut erreicht, wenn man die folgenden
+Fragen beantwortet, bzw. die Themen darstellt:
+a) Frage: Was sind Sticky-Sessions?
+b) Frage: Wofür werden Sticky-Sessions eingesetzt?
+c) Frage: Was ist das Problem mit Sticky-Sessions?
+d) Thema (optional): Möglichkeiten die Probleme, die unter b)
+   dargelegt werden, zu lösen. Sticky-Sessions sind eine Lösung.
+e) Frage: Was sind SPWA?
+f) Was für eine Lösungsmöglichkeit ergibt sich nun durch den
+   Einsatz von SPWA für das unter b) dargestellte Problem.
+
+zu a) ok
+zu b) Keine Darstellung
+zu c) Keine Darstellung
+zu d) Keine Darstellung
+zu e) Keine Darstellung
+zu f) Kurz, noch möglich wäre gewesen etwas über
+      Integrität des Zustands zu sagen, den dem Client kann ja
+      nicht vertraut werden. (JWT)
+
+Punkte:
+zu a)  2 /  2 + 0 Punkte 
+zu b)  0 /  2 + 0 Punkte
+zu c)  0 /  2 + 0 Punkte
+zu d)  0 /  0 + 2 Punkte 
+zu e)  0 /  0 + 2 Punkte 
+zu f)  2 /  4 + 0 Punkte
+      ==================
+       4 / 10 + 4 Punkte 
+
+======== Aufgabe 1.2 ========
+Sehr gut!
+Punkte: 15 / 15
+
+
+======== Aufgabe 1.3 ========
+Sehr gut!
+
+Das Menü verhindert nicht, dass der Rest der Anwendung nicht
+mehr reagiert. Die Lösung mit dem mouseleave ist nicht zulässig,
+da dies das Menü nicht gut nutzbar macht.
+Abzug: -5 Punkte
+
+Die Handler, die der Funktion createItem mitgegeben werden, habe die
+falsche Signatur. Sie erhalten nicht, wie vorgesehen das Menü als
+Parameter.
+Abzug: -5 Punkte
+
+Punkte: 15 / 25
