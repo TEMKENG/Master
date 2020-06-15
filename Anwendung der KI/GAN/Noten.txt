@@ -1,0 +1,11 @@
+Generative Adversarial Networks, oder GANs, sind eine Architektur für das Training generativer Modelle, wie z.B. tief faltende neuronale Netze zur Bilderzeugung.
+
+Die Entwicklung eines GAN zur Erzeugung von Bildern erfordert sowohl ein Diskriminator-Faltungsmodell für neuronale Netze zur Klassifizierung, ob ein bestimmtes Bild real oder erzeugt ist, als auch ein Generatormodell, das inverse Faltungsschichten verwendet, um eine Eingabe in ein vollständiges zweidimensionales Bild mit Pixelwerten zu transformieren.
+
+
+deconvolution
+	-UpSampling2D -> Conv2d
+	- Conv2DTranspose := Kombination von Beiden
+
+Wenn der Diskriminator bei der Erkennung gefälschter Proben gut ist, wird der Generator stärker aktualisiert, und wenn das Diskriminatormodell bei der Erkennung gefälschter Proben relativ schlecht oder verwirrend ist, wird das Generatormodell weniger aktualisiert.
+
