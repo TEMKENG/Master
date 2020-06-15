@@ -77,8 +77,9 @@ def define_gan(g_model, d_model):
 
 # load and prepare the training images
 def load_real_samples():
-    train_x, _ = next(Utils.get_generator(directory='data', image_size=(28, 28), batch_size=nb_img))
-    train_x = train_x.astype('float32') / 255.0
+    # train_x, _ = next(Utils.get_generator(directory='data', image_size=(28, 28), batch_size=nb_img))
+    train_x = Utils.crops()
+    train_x = train_x.astype('float32')
     return train_x
 
 
