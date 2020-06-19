@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Right-Click Menus</title>
+  <meta name="viewport" content="width=device-width">
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
+
+    html {
+      font-size: 16px;
+      font-family: sans-serif;
+      line-height: 1.5;
+      -moz-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      box-sizing: border-box;
+    }
+
+    body {
+      padding: 1rem;
+    }
+
+    h1, h2, p, div {
+      padding: 1rem 2rem;
+    }
+
+    #box {
+      border: 1px solid #999;
+    }
+
+    .menu {
+      width: 12rem;
+      height: 4.5rem;
+      background-color: #f4f4f4;
+      color: #333;
+      border: 1px solid #aaa;
+      box-shadow: 2px 2px 2px #999;
+      border-radius: 0.2rem;
+      list-style: none;
+      position: fixed;
+    }
+
+    .menu.off {
+      top: -200%;
+      left: -200%;
+    }
+
+    .menu-item {
+      height: 1.5rem;
+      line-height: 1.5rem;
+      font-size: 1rem;
+      font-weight: 100;
+      padding: 0 1rem;
+      cursor: pointer;
+    }
+
+    .menu-item:hover,
+    .menu-item:active {
+      color: #000;
+      font-weight: 500;
+    }
+  </style>
+  <!--
+
+  -->
+</head>
+<body>
+<h1>Right-Click Menus</h1>
+<h2>`contextmenu` Event</h2>
+<p>Right-click on the text below.</p>
+<div id="box">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sed alias iusto iure est
+  veritatis ipsum voluptas nesciunt impedit, quam, distinctio nulla illo obcaecati expedita libero,
+  fugiat porro, unde voluptate rem.
+</div>
+
+<ul id='menu' class="menu" style="display: none">
+  <li id="red">Red Item</li>
+  <hr/>
+  <li id="gold">Gold Item</li>
+  <hr/>
+  <li id="green">Green Item</li>
+</ul>
+
+<script>
+  let menu = null;
+  document.addEventListener('DOMContentLoaded', function () {
+    let l1 = document.createElement('li');
+    let l2 = document.createElement('li');
+    let l3 = document.createElement('li');
+
+    l1.setAttribute('id', 'redf');
+    l2.setAttribute('id', 'goldf');
+    l3.setAttribute('id', 'greenf');
+
+    l1.appendChild(document.createTextNode('red'));
+    l2.appendChild(document.createTextNode('gold'));
+    l3.appendChild(document.createTextNode('green'));
+
+    //make sure the right click menu is hidden
+    // menu = document.querySelector('.menu');
+    menu = document.getElementById('menu');
+    console.log('Menu: ', menu);
+    menu.appendChild(l1);
+    menu.appendChild(l2);
+    menu.appendChild(l3);
+    // hidemenu();
+    //add the right click listener to the box
+    let box = document.getElementById('box');
+    box.addEventListener('contextmenu', showmenu);
+
+    //add a listener for leaving the menu and hiding it
+    menu.addEventListener('mouseleave', hidemenu);
+
+    //add the listeners for the menu items
+    addMenuListeners();
+  });
+
+  function addMenuListeners() {
+    console.log('tester');
+    document.getElementById('red').addEventListener('click', setColour);
+    document.getElementById('gold').addEventListener('click', setColour);
+    document.getElementById('green').addEventListener('click', setColour);
+  }
+
+  function setColour(ev) {
+    hidemenu();
+    document.getElementById('box').style.backgroundColor = ev.target.id;
+    // ev.target.style.backgroundColor = ev.target.id;
+    console.log(ev.target.id, ev.target.nodeName)
+  }
+
+  function showmenu(ev) {
+    //stop the real right click menu
+    ev.preventDefault();
+    //show the custom menu
+    console.log(ev.clientX, ev.clientY);
+    menu.style.top = `${ev.clientY - 20}px`;
+    menu.style.left = `${ev.clientX - 20}px`;
+    menu.style.display = "block";
+  }
+
+  function hidemenu(ev) {
+    menu.style.display = "none";
+
+  }
+</script>
+</body>
+</html>

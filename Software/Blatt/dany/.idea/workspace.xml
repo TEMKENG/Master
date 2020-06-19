@@ -1,7 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="90aea86c-a038-44a6-a758-7b36cbc9c384" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../Blatt 3 - Entwurf - 11.6.2020 - 1500.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blatt_02/DrawerEinfach/DrawerEinfach.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blatt_02/DrawerEinfach/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/../blatt_02/DrawerEinfach/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blatt_02/DrawerEinfach/script.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../blatt_02/DrawerEinfach/script.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../blatt_02/projektdiagramm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectId" id="1dD17m6lBmzTS84Z3WLLC8o5JUW" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../blatt_03" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2019.1.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="90aea86c-a038-44a6-a758-7b36cbc9c384" name="Default Changelist" comment="" />
+      <created>1591944684292</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1591944684292</updated>
+      <workItem from="1591944686752" duration="17230000" />
+      <workItem from="1591983230112" duration="1637000" />
+      <workItem from="1592230910627" duration="38000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/drawer.js" />
+        <option value="$PROJECT_DIR$/api.js" />
+      </list>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="549" y="206" key="FileChooserDialogImpl" timestamp="1592230946136">
+      <screen x="0" y="30" width="1536" height="834" />
+    </state>
+    <state x="549" y="206" key="FileChooserDialogImpl/0.30.1536.834/-1920.-132.1920.1050@0.30.1536.834" timestamp="1592230946136" />
+    <state x="477" y="276" key="com.intellij.ide.util.TipDialog" timestamp="1592230911994">
+      <screen x="0" y="30" width="1536" height="834" />
+    </state>
+    <state x="477" y="276" key="com.intellij.ide.util.TipDialog/0.30.1536.834/-1920.-132.1920.1050@0.30.1536.834" timestamp="1592230911994" />
+    <state width="676" height="336" key="javadoc.popup.new" timestamp="1591989552814">
+      <screen x="0" y="30" width="1536" height="834" />
+    </state>
+    <state width="676" height="336" key="javadoc.popup.new/0.30.1536.834/-1920.-132.1920.1050@0.30.1536.834" timestamp="1591989552814" />
   </component>
 </project>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .panel {
+      background-color: green;
+      width: 200px;
+      height: 200px;
+    }
+
+    ul {
+      max-height: 100px;
+      overflow-y: scroll;
+    }
+  </style>
+</head>
+<body>
+<div class="panel"></div>
+<p class="coordinates">Laden ...</p>
+<ul class="punkteliste"></ul>
+
+<script>
+  let $panel = document.querySelector('.panel');
+  let $coordiantes = document.querySelector('.coordinates');
+  let $punkteliste = document.querySelector('.punkteliste');
+
+  $coordiantes.innerHTML = 'x: -, y: -';
+
+  let punkteliste = [];
+
+  $panel.addEventListener('mousemove', (event) => {
+    $coordiantes.innerHTML = `x: ${event.offsetX}, y: ${event.offsetY}`;
+  });
+
+  $panel.addEventListener('mouseleave', (event) => {
+    $coordiantes.innerHTML = `x: -, y: -`;
+  });
+
+  $panel.addEventListener('click', (event) => {
+    punkteliste.unshift({
+      x: event.offsetX,
+      y: event.offsetY,
+    });
+
+    $punkteliste.innerHTML = '';
+
+    punkteliste.forEach((item) => {
+      $punkteliste.innerHTML += `<li>x: ${item.x}; y:${item.y}</li>`;
+    });
+  });
+
+  class PopupMenu {
+    constructor () {
+      this.entries = []
+    }
+
+    show () {
+      document.querySelector('body').innerHTML += '<div class="popup"></div>';
+
+      this.entries.forEach(entry => {
+        entry.render(document.querySelector('.popup'));
+      })
+    }
+
+    addEntry (entry) {
+      this.entries.push(entry);
+    }
+  }
+
+  class PopupMenuEntry {
+    constructor (label, handler, element) {
+      this.label = label;
+      this.handler = handler;
+      this.element = (typeof element == 'string' ? element : 'li');
+    }
+
+    render (parent) {
+      parent.innerHTML += '<' + this.element + '>' + this.label + '</' + this.element + '>';
+    }
+  }
+
+  class PopupMenuSeparator {
+    constructor () {
+    }
+
+    render ($parent) {
+      $parent.innerHTML += '<hr>';
+    }
+  }
+
+  document.querySelector('body').addEventListener('click', (event) => {
+    let menu = new PopupMenu();
+    menu.addEntry(new PopupMenuEntry('Item 1', () => {}, 'li class="menu__1"'));
+    menu.addEntry(new PopupMenuEntry('Item 2', () => {}, 'li class="menu__2"'));
+    menu.addEntry(new PopupMenuSeparator());
+    menu.addEntry(new PopupMenuEntry('Item 3', () => {}, 'li class="menu__3"'));
+
+    menu.show();
+  });
+</script>
+
+</body>
+</html>

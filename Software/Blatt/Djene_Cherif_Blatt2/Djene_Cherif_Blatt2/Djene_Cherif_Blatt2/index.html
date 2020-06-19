@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Zeichenpogramm</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <script src="drawer.js" type="text/javascript" defer="defer"></script>
+</head>
+
+<body onload="init()">
+
+    <p>Wählen Sie auf der linken Seite Ihr Zeichwerkzeug aus.
+    Haben Sie eines ausgewählt, können Sie mit der Maus
+    die entsprechenden Figuren zeichen. Typischerweise, indem
+    Sie die Maus drücken, dann mit gedrückter Maustaste die
+    Form bestimmen, und dann anschließend die Maustaste loslassen.
+    </p>
+    <p> Wenn Sie den Menüpunkt &quot;Selektion"&quot; auswählt, können Sie die Graphikobjekte durch Klick selektionieren.
+        Selektionierte Objekte erhalten kleine Rechtecke an Ihren Enden. <br />
+        Falls mehrere Graphikobjekte in Frage kommt, können Sie diese durch mehrmalige Klicken durchschalten.
+        Und Wenn Sie mehrere Objekte auf einmal selektionieren möchten, halten Sie beim Klicken die <span style="font-family: monospace;">STRG</span>-Taste gedrückt.<br />
+        Mit dem Button &quot;Selektion löschen&quot; können Sie selektierte Objekte aus der Zeichenfläche löschen.
+    </p>
+
+    <ul class="tools"></ul>
+
+    <canvas id="drawArea" id="myCanvas" width="600" height="400"></canvas>
+
+    <div id="optionArea">
+        <button id="delSelect">Selektion löschen</button><br /><br />
+
+    </div>
+
+</body>
+</html>

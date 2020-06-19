@@ -1,0 +1,49 @@
+body{
+    display: flex;
+}
+body > * {
+    margin: 10px;
+}
+.tools li {
+    padding: 5px;
+    list-style: none;
+}
+
+.tools li:hover {
+    color: cornflowerblue;
+    cursor: pointer;
+}
+
+.tools li.marked {
+    background-color: cornflowerblue;
+    color: white;
+}
+
+#drawArea {
+    border:1px solid #000000;
+    background-color: lightgrey;
+}
+#optionArea .butn {
+    background: #3498db;
+    background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+    background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+    background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+    background-image: -o-linear-gradient(top, #3498db, #2980b9);
+    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    font-family: Arial;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 10px;
+    text-decoration: none;
+  }
+  
+#optionArea  .butn:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+  } 
