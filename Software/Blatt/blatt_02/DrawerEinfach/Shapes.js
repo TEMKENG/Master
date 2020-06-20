@@ -81,7 +81,7 @@ export class Line extends AbstractShape {
         data["zOrder"] = this.zOrder;
         data["bgColor"] = this.bgColor;
         data["fgColor"] = this.bdColor;
-        shape["type"] = "line";
+        shape["type"] = "Line";
         shape["id"] = this.id;
         shape["data"] = data;
         return shape;
@@ -413,17 +413,139 @@ export class TriangleFactory {
     }
 }
 export class ChooseShape {
+    // tmpMovableShape: { [p: number]: Shape } ;
     constructor(shapeManager) {
         this.shapeManager = shapeManager;
+        // export class ChooseShape implements ShapeFactory {
         this.label = "Auswahl";
+        this.move = false;
+        this.movableShape = {};
+        this.tmpMovableShape = {};
+        // super(shapeManager);
     }
     handleMouseDown(x, y) {
+        this.from = new Point2D(x, y);
+        // this.shapeManager.chooseShapeAt(x, y, false,);
+        this.movableShape = this.shapeManager.chooseShapeAt(x, y, true, "down");
+        for (let id of Object.keys(this.movableShape)) {
+            // if (this.movableShape.hasOwnProperty(id)) {
+            // let id = Number(i);
+            this.movableShape[id].isDragging = true;
+            let object = this.movableShape[id].object();
+            console.log("Result of up id: ", id, typeof id, object.type);
+            this.move = true;
+            // }
+        }
+        console.log("Result of down: ", this.movableShape);
     }
     handleMouseUp(x, y) {
-        this.shapeManager.chooseShapeAt(x, y, true);
+        this.shapeManager.chooseShapeAt(x, y, false, "up");
+        // for (let id in this.movableShape) {
+        //     if (this.movableShape.hasOwnProperty(id)) {
+        //         // let id = Number(i);
+        //         this.movableShape[id].isDragging = true;
+        //         let object = this.movableShape[id].object();
+        //         console.log("Result of up id: ", id, typeof id, object.type);
+        //     }
+        // }
+        if (this.move) {
+            for (let id of Object.keys(this.tmpMovableShape)) {
+                this.shapeManager.removeShapeWithId(+id, false);
+            }
+            console.log("Tempo shapüe:", this.tmpMovableShape, this.movableShape);
+            this.tmpMovableShape = {};
+            console.log("Tempo shape:", this.tmpMovableShape, this.movableShape);
+            let diff = this.diff(this.from, this.tmpTo);
+            for (let id of Object.keys(this.movableShape)) {
+                let shape = this.createShape(diff.dx, diff.dy, this.movableShape[id]);
+                this.tmpMovableShape[shape.id] = shape;
+                this.shapeManager.addShape(shape);
+                // this.shapeManager.removeShapeWithId(+id, false);
+            }
+            // for (let id of Object.keys(this.movableShape)) {
+            //     this.shapeManager.removeShapeWithId(+id, true);
+            // }
+            console.log("TEMP SHAPE: ", this.tmpMovableShape, this.movableShape);
+            this.movableShape = this.tmpMovableShape;
+            console.log("TEMP SHAPE: ", this.tmpMovableShape, this.movableShape);
+        }
+        this.move = false;
+        this.from = undefined;
+        console.log("Resultof up: ", this.movableShape);
     }
     handleMouseMove(x, y) {
-        this.shapeManager.chooseShapeAt(x, y);
+        this.tmpTo = new Point2D(x, y);
+        this.shapeManager.chooseShapeAt(x, y, false);
+        if (this.move) {
+            for (let id of Object.keys(this.tmpMovableShape)) {
+                this.shapeManager.removeShapeWithId(+id, false);
+            }
+            console.log("Tempo shapüe:", this.tmpMovableShape, this.movableShape);
+            this.tmpMovableShape = {};
+            console.log("Tempo shape:", this.tmpMovableShape, this.movableShape);
+            let diff = this.diff(this.from, this.tmpTo);
+            for (let id of Object.keys(this.movableShape)) {
+                let shape = this.createShape(diff.dx, diff.dy, this.movableShape[id]);
+                this.tmpMovableShape[shape.id] = shape;
+                this.shapeManager.addShape(shape);
+                // this.shapeManager.removeShapeWithId(+id, false);
+            }
+            // for (let id of Object.keys(this.movableShape)) {
+            //     this.shapeManager.removeShapeWithId(+id, true);
+            // }
+            console.log("TEMP SHAPE: ", this.tmpMovableShape, this.movableShape);
+            // let tmp = this.movableShape;
+            this.movableShape = this.tmpMovableShape;
+            console.log("TEMP SHAPE: ", this.tmpMovableShape, this.movableShape);
+            // this.tmpMovableShape = {};
+        }
+        this.from = this.tmpTo;
+    }
+    createShape(dx, dy, oldShape) {
+        let object = oldShape.object();
+        let data = object.data;
+        let shape = undefined;
+        // console.log("Create Shape: ", oldShape);
+        if (object.type === "Triangle") {
+            console.log("Triangle :");
+            let p1 = this.pointUpdate(data.p1, dx, dy);
+            let p2 = this.pointUpdate(data.p2, dx, dy);
+            let p3 = this.pointUpdate(data.p3, dx, dy);
+            shape = new Triangle(p1, p2, p3);
+        }
+        else if (object.type === "Circle") {
+            console.log("Circle :");
+            let center = this.pointUpdate(data.center, dx, dy);
+            shape = new Circle(center, data.radius);
+        }
+        else {
+            let to = this.pointUpdate(data.to, dx, dy);
+            let from = this.pointUpdate(data.from, dx, dy);
+            if (object.type === "Line") {
+                // console.log("Line :",);
+                shape = new Line(from, to);
+            }
+            else if (object.type === "Rectangle") {
+                shape = new Rectangle(from, to);
+            }
+        }
+        // console.log("Data line: ", data);
+        this.shapeUpdate(data, shape);
+        return shape;
+    }
+    pointUpdate(point, dx, dy) {
+        return new Point2D(point.x + dx, point.y + dy);
+    }
+    shapeUpdate(oldShapeData, newShape) {
+        // console.log("old shape: ", newShape, oldShapeData, "okay");
+        newShape.zOrder = oldShapeData.zOrder;
+        newShape.bdColor = oldShapeData.fgColor;
+        newShape.bgColor = oldShapeData.bgColor;
+        newShape.isDragging = oldShapeData.isDragging;
+        // console.log("New shape: ", newShape);
+    }
+    diff(from, to) {
+        return { dx: to.x - from.x, dy: to.y - from.y };
     }
 }
 function selected_draw(ctx, points, color) {

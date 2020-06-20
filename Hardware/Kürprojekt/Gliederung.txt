@@ -1,0 +1,13 @@
+
+
+Cache Kohärenz
+	-Einleitung
+		-- Definition|Funktionsbeschreibung
+	- Kohärenzprotokolle
+		--Directory based
+		-- Snooping
+			-- MESI
+			-- MOESI
+			-- Illustraktionsbeispiel
+
+	-Praktischer Einsatz von Kohärenzprotokoll (MESI):Matrixmultiplikation

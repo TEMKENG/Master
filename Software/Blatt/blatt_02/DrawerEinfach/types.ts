@@ -21,7 +21,8 @@ export interface ShapeManager {
 
     removeShapeWithId(id: number, redraw?: boolean): this;
 
-    chooseShapeAt(x: number, y: number, selected?: boolean): this;
+    // chooseShapeAt(x: number, y: number, selected?: boolean): this;
+    chooseShapeAt(x: number, y: number, selected?: boolean, mode?: string);
 }
 
 export interface ShapeFactory {

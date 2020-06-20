@@ -1,0 +1,47 @@
+Die Multiprozessorsysteme werden im Vergleich zu Mehrrechnersysteme immer mehr eingesetzt.
+Der große Unterschied zwischen Multiprozessorsysteme und Mehrrechnersysteme ist die Art und Weise,
+wie sie den Speicher nutzen. Während sich mehrere Prozessoren einen gemeinsame Speicher bzw. Hauptspeicher bei einem Multiprozessorsystem teilen,
+besitzt jeder Rechner einen eigenen Speicher bei einem Mehrrechnersystem und es verwendet ein Verbindungsnetzwerk, um Daten zwischen verschiedenen Computern auszutauschen. 
+
+Problem mit System mit gemeisame Speicher
+Die Verwaltung von gemeinsamem Speicher bleibt einer der großen Herausforderungen beim Einsatz von Multiprozessorsystemen.
+
+Mithilfe des FIFO-Prinzips und des sequentiellen Zugriffs kann eine zuverlässige Kontrolle über den Hauptspeicher sichergestellt werden.
+Dies könnte zu einer relativ niedrigen Durchschnittsgeschwindigkeit führen, mit der alle Komponenten (CPU) ihre Daten senden können.
+
+
+
+
+
+
+--Kollision
+
+	Die Verwaltung von gemeinsamem Speicher oder vom Bus bleibt einer der großen Herausforderungen beim Einsatz von Multiprozessorsysteme,
+	Denn die gleichzeitige Nutzung des Buses durch mehrere Komponenten können zur Kollision führen und alle an diese Kollision beteiligten Daten verloren gehen
+	und sie sind in meinsten Fällen auch nicht mehr zu rekonstruieren.
+--Von-Neumann-Flaschenhals
+	Um Kollisionen zu vermeiden, muss der Computer Vorkehrungen (z.B FIFO-Prinzip für die Speicherzugriffen) treffen, die sicherzustellen, dass zwei Komponenten nicht 	versehentlich gleichzeitig Daten senden. Infolgedessen ist die Geschwindigkeit, mit der alle Komponenten im Durchschnitt ihre Daten senden können, vergleichsweise 	gering
+--Skalierbarkeit
+	Bus-basierte Multiprozessorsysteme skalieren schlecht
+
+
+Beispiel Cache Kohärenz.
+
+Ein der Nachteile von Bus System ist, dass mehrere Komponenten auf den Bus nicht gleichzeitig schreiben dürfen,
+der Computer muss daher Vorkehrungen treffen, um sicherzustellen, dass zwei Komponenten nicht versehentlich gleichzeitig Daten senden
+Infolgedessen ist die Geschwindigkeit, mit der alle Komponenten im Durchschnitt ihre Daten senden können, vergleichsweise gering
+Daraus ergibt sich der von-Neumann-Flaschenhals
+
+
+
+Noten:
+Definition: Eine parallele Rechnerarchitektur gilt als skalierbar,
+wenn die effektiv verfügbare Rechenleistung sich proportional
+zur Anzahl der eingebauten CPUs verhält.
+
+Definition: Ein Multiprozessorsystem ist ein Rechnersystem,
+in dem zwei oder mehr CPUs vollen Zugriff auf einen
+gemeinsamen Speicher haben.
+Cache-Kohärenz ist eine Beziehung zwischen den verschiedenen
+Caches in einem Multiprozessorsystem.
+https://ess.cs.tu-dortmund.de/Teaching/SS2019/BS/Downloads/12-Multiprozessorsysteme.pdf

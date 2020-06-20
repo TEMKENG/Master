@@ -1,0 +1,7 @@
+
+omp_set_dynamic(1); 
+Die Anzahl von Threads wird zwinschen 1 und num_threads() frei gewählt.
+num_threads(18); dann arbeitet das Programm mit 1 bis 18 Threads.
+
+omp_set_dynamic(0);
+Hier ist die Anzahl von Threads festgelegt 

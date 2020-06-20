@@ -12,34 +12,34 @@ def crops(directory='Bilder_Smileys'):
         img = np.array(img)
 
         for i, row in enumerate(img):
-            if row.sum() / len(row) != 255:
-                if i - 10 > 0:
-                    img = img[i - 10:]
+            if row.sum() == 0:
+                if i - 5 > 0:
+                    img = img[i - 5:]
                 break
         img = img[::-1]
         for i, row in enumerate(img):
-            if row.sum() / len(row) != 255:
-                if i - 10 > 0:
-                    img = img[i - 10:]
+            if row.sum() == 0:
+                if i - 5 > 0:
+                    img = img[i - 5:]
                 break
         for i in range(img.shape[1]):
             col = img[:, i]
-            if col.sum() / len(col) != 255:
-                if i - 10 > 0:
-                    img = img[:, i - 10:]
+            if col.sum() == 0:
+                if i - 5 > 0:
+                    img = img[:, i - 5:]
                 break
         for i in reversed(range(img.shape[1])):
             col = img[:, i]
-            if col.sum() / len(col) != 255:
-                if i - 10 > 0:
-                    img = img[:, :i + 10][::-1]
+            if col.sum() == 0:
+                if i - 5 > 0:
+                    img = img[:, :i + 5][::-1]
                 break
-        for i in range(img.shape[0]):
-            for j in range(img.shape[1]):
-                if img[i][j] == 255:
-                    img[i][j] = 0
-                else:
-                    img[i][j] = 1
+        # for i in range(img.shape[0]):
+        #     for j in range(img.shape[1]):
+        #         if img[i][j] == 255:
+        #             img[i][j] = 0
+        #         else:
+        #             img[i][j] = 1
 
         img = Image.fromarray(img, 'L')
         img = img.resize((28, 28))
@@ -58,11 +58,79 @@ def crops(directory='Bilder_Smileys'):
     return data
 
 
+# box(point1 , point2)
+def cro(path, box=(163, 213, 257, 326 - 20)):
+    with Image.open(path) as im:
+        reg = im.crop(box)
+        reg.save(path.replace('data', "crop"))
+        reg.show()
+        # plt.imshow(reg)
+        # plt.show()
+
+
 if __name__ == '__main__':
-    # path = "data/Smiley_Grinsen/Smiley_Grinsen.png"
-    shutil.rmtree("crop", ignore_errors=True)
-    os.makedirs("crop", exist_ok=True)
-    crops()
+    path = "data/Smiley_Grinsen/Smiley_Grinsen.png"
+    directories = [os.path.join('data/Smiley_Lachen', file) for file in os.listdir('data/Smiley_Lachen')]
+
+    # for file in directories:
+    #     os.makedirs(file.replace("data", "crop"), exist_ok=True)
+    # shutil.rmtree("crop", ignore_errors=True)
+    os.makedirs("crop/Smiley_Lachen", exist_ok=True)
+
+    # cro(path)
+    for file in directories:
+        img = Image.open(file)
+        img = img.convert("L")
+        img = np.asarray(img)
+        img = np.where(img == 255, 0, 1)
+        plt.imshow(img, cmap="gray")
+        plt.show()
+    # crops()
+    imgs = list()
+    img = Image.open(path)
+    img = img.convert("L")
+    img = np.asarray(img)
+    img = np.where(img == 255, 0, 1)
+    
+
+    
+    # a, b, c, d = (0, 0, 0, 0)
+    # # plt.imshow(img)
+
+    # for i, row in enumerate(img):
+    #     if row.sum() != 0:
+    #         if i - 5 > 0:
+    #             img = img[i - 5:]
+    #             a = i - 5
+    #         break
+    # img = img[::-1]
+    # for i, row in enumerate(img):
+    #     if row.sum() != 0:
+    #         if i - 5 > 0:
+    #             img = img[i - 5:]
+    #             b = i - 5
+
+    #         break
+    # for i in range(img.shape[1]):
+    #     col = img[:, i]
+    #     if col.sum() != 0:
+    #         if i - 5 > 0:
+    #             img = img[:, i - 5:]
+    #             c = i - 5
+
+    #         break
+    # for i in reversed(range(img.shape[1])):
+    #     col = img[:, i]
+    #     if col.sum() != 0:
+    #         if i - 5 > 0:
+    #             img = img[:, :i + 5][::-1]
+    #             d = i + 5
+
+    #         break
+    # # plt.figure()
+    # plt.imshow(img)
+    # plt.show()
+    # print(f'box=({c},{a}, {c + d}, {a + b})')
     # # for file in directories:
     # #     os.makedirs(file.replace("data", "crop"), exist_ok=True)
     # #

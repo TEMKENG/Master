@@ -23,7 +23,7 @@ export class Canvas implements ShapeManager {
     private startY: number;
     private offsetX: number;
     private offsetY: number;
-    private dragSahpe: Shape[] = [];
+    private dragShape: { [p: number]: Shape } = {};
     private auswahl: boolean = false;
 
     constructor(canvasDomElement: HTMLCanvasElement,
@@ -38,9 +38,9 @@ export class Canvas implements ShapeManager {
         canvasDomElement.addEventListener("mousedown", createMouseHandler("handleMouseDown"));
         canvasDomElement.addEventListener("mouseup", createMouseHandler("handleMouseUp"));
 
-        canvasDomElement.addEventListener("mousemove", e => self.myMove(e));
-        canvasDomElement.addEventListener("mousedown", e => self.myDown(e));
-        canvasDomElement.addEventListener("mouseup", e => self.myUp(e));
+        // canvasDomElement.addEventListener("mousemove", e => self.myMove(e));
+        // canvasDomElement.addEventListener("mousedown", e => self.myDown(e));
+        // canvasDomElement.addEventListener("mouseup", e => self.myUp(e));
         // canvasDomElement.addEventListener("mousemove", function () {
         //     console.log("TEMKENG je ne suis plus tres sûr!");
         // });
@@ -138,7 +138,8 @@ export class Canvas implements ShapeManager {
                         x = e.pageX - this.offsetLeft,
                         y = e.pageY - this.offsetTop,
                         ss = toolarea.getSelectedShape();
-                    self.auswahl = ss.label === 'Auswahl';
+                    if (ss)
+                        self.auswahl = ss.label === 'Auswahl';
                     // if left mouse button is pressed,
                     // and if a tool is selected, do something
                     if (e.button === 0 && ss) {
@@ -171,7 +172,7 @@ export class Canvas implements ShapeManager {
                     // console.log('State: ', this.state, this.shapes, typeof id);
                     this.dragok = true;
                     tmpShape.push(id);
-                    this.dragSahpe.push(this.shapes[id]);
+                    this.dragShape[id] = this.shapes[id];
                     this.shapes[id].isDragging = true;
                     // this.shapes[id].draw(this.ctx, true, this.selectColor);
 
@@ -181,7 +182,12 @@ export class Canvas implements ShapeManager {
             // save the current mouse position
             this.startX = x;
             this.startY = y;
-            console.log("myDown: ", this.dragSahpe, this.auswahl);
+            // let line = this.dragShape[0];
+            // for (let i in line){
+            //     if(line.hasOwnProperty(i))
+            //         console.log("Line: ", i, line[i]);
+            // }
+            console.log("myDown: ", this.dragShape, this.auswahl);
         }
     }
 
@@ -193,11 +199,11 @@ export class Canvas implements ShapeManager {
 
         // clear all the dragging flags
         this.dragok = false;
-        for (let index in this.dragSahpe) {
-            this.dragSahpe[index].isDragging = false;
+        for (let index in this.dragShape) {
+            this.dragShape[index].isDragging = false;
             // this.shapes[id].isDragging = true;
         }
-        this.dragSahpe = [];
+        this.dragShape = [];
         console.log("myUp");
 
     }
@@ -205,7 +211,7 @@ export class Canvas implements ShapeManager {
 // handle mouse moves
     myMove(e: MouseEvent) {
         // if we're dragging anything...
-        if (this.dragok && this.auswahl && this.dragSahpe.length > 0) {
+        if (this.dragok && this.auswahl && Object.keys(this.dragShape).length > 0) {
 
             // tell the browser we're handling this mouse event
             e.preventDefault();
@@ -223,7 +229,7 @@ export class Canvas implements ShapeManager {
             // move each rect that isDragging
             // by the distance the mouse has moved
             // since the last mousemove
-            for (let i = 0; i < this.dragSahpe.length; i++) {
+            for (let i = 0; i < Object.keys(this.dragShape).length; i++) {
                 // const r = rects[i];
                 // if (r.isDragging) {
                 //     r.x += dx;
@@ -237,7 +243,7 @@ export class Canvas implements ShapeManager {
             // reset the starting mouse position for the next mousemove
             this.startX = mx;
             this.startY = my;
-            console.log("myMove: ", this.dragSahpe.length);
+            console.log("myMove: ", Object.keys(this.dragShape).length);
         }
     }
 
@@ -321,9 +327,12 @@ export class Canvas implements ShapeManager {
         this.selectShapes = [];
     }
 
-    chooseShapeAt(x: number, y: number, selected: boolean = false): this {
-        this.ctx.clearRect(0, 0, this.width, this.height);
+    // chooseShapeAt(x: number, y: number, selected: boolean = false, mode?:string): this {
+    chooseShapeAt(x: number, y: number, selected: boolean = false, mode: string) {
         let shapeUnderMouse: number[] = [];
+
+        this.ctx.clearRect(0, 0, this.width, this.height);
+
 
         // for of return genauer element of the list
         // for in return str element of the list
@@ -332,6 +341,7 @@ export class Canvas implements ShapeManager {
             if (this.shapes[id].isInside(x, y)) {
                 shapeUnderMouse.push(id);
                 this.shapes[id].draw(this.ctx, true, this.selectColor);
+                // console.log(this.shapes[id])
 
             } else {
                 this.shapes[id].draw(this.ctx);
@@ -372,13 +382,41 @@ export class Canvas implements ShapeManager {
                 // console.log("Key D: ", keyD);
             }
         }
+        // if (mode === "up") {
+        if (mode) {
+            console.log("You can have success in all thing that you enterprise");
+            // console.log("message:", mode, x, y, selected);
+            this.dragok = false;
+            for (let id of this.selectShapes) {
+                // console.log("down: ", id, typeof id);
+                if (this.shapes[id].isInside(x, y)) {
+                    // console.log('State: ', this.state, this.shapes, typeof id);
+                    this.dragok = true;
+                    // tmpShape.push(id);
+                    this.dragShape[id] = this.shapes[id];
+                    // this.shapes[id].isDragging = true;
+                    // this.shapes[id].draw(this.ctx, true, this.selectColor);
+                }
+            }
+            // save the current mouse position
+            this.startX = x;
+            this.startY = y;
+            // let line = this.dragShape[0];
+            // for (let i in line){
+            //     if(line.hasOwnProperty(i))
+            //         console.log("Line: ", i, line[i]);
+            // }
+            console.log("my ", mode, " ", this.dragShape, this.auswahl);
+
+
+        }
         for (let i = 0; i < this.selectShapes.length; i++) {
             this.dragok = true;
             // console.log("Selected: ", this.selectShapes, this.shapes);
             this.shapes[this.selectShapes[i]].draw(this.ctx, true, 'red');
         }
 
-        return this;
+        return mode ? this.dragShape : this;
     }
 }
 
