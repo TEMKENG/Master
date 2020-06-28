@@ -1,4 +1,4 @@
-import {ShapeFactory, ShapeManager} from "./types.js";
+import {Shape, ShapeFactory, ShapeManager} from "./types.js";
 import {CircleFactory, LineFactory, RectangleFactory, TriangleFactory, ChooseShape} from "./Shapes.js";
 import {ToolArea} from "./ToolArea.js";
 import {Canvas} from "./Canvas.js";
@@ -23,8 +23,8 @@ function init() {
         removeShapeWithId(id, rd) {
             return canvas.removeShapeWithId(id, rd);
         },
-        chooseShapeAt(x, y, selected, mode) {
-            return canvas.chooseShapeAt(x, y, selected, mode);
+        chooseShapeAt(x, y, selected, toSelect) {
+            return canvas.chooseShapeAt(x, y, selected, toSelect);
         }
     };
     const shapesSelector: ShapeFactory[] = [

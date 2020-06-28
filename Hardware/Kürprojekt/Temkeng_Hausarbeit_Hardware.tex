@@ -1,0 +1,124 @@
+\documentclass[12pt,a4paper]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+% \usepackage[latin1]{inputenc} %  Alternativ unter Windows
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{url}
+
+\usepackage[pdftex]{graphicx}
+\usepackage{latexsym}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{ae,aecompl}
+\usepackage{blindtext}
+\setcounter{secnumdepth}{5}
+%\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\usepackage{acronym}
+\usepackage{subcaption}
+\usepackage[dvipsnames]{xcolor}
+%tikz
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata, matrix,chains,positioning,decorations.pathreplacing,arrows}
+
+\usepackage[linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}
+
+\usepackage{multicol}
+
+%\usepackage[demo]{graphicx}
+
+
+% Abstand obere Blattkante zur Kopfzeile ist 2.54cm - 15mm
+\setlength{\topmargin}{-15mm}
+
+
+
+\def\Arrow{\raisebox{3\height}{\scalebox{1}{$\xRightarrow[.]{.}$}}}
+\newcommand*{\putunder}[2]{	{\mathop{#1}_{\textstyle #2}}}
+
+
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+	{-2.5ex\@plus -1ex \@minus -.25ex}%
+	{1.25ex \@plus .25ex}%
+	{\normalfont\normalsize\bfseries}}
+\makeatother
+\setcounter{secnumdepth}{4} % how many sectioning levels to assign numbers to
+\setcounter{tocdepth}{4}    % how many sectioning levels to show in ToC
+
+\begin{document}
+  % Keine Seitenzahlen im Vorspann
+  \pagestyle{empty}
+
+  % Titelblatt der Arbeit
+  \begin{titlepage}
+
+    \includegraphics[scale=0.3]{HSA_Logo_horizontal} 
+    \vspace*{2cm} 
+
+ \begin{center} \large 
+    
+
+%    {\large Extreme Low Resources Convolutional Network for Classifying Large-Scale Image Sets}
+    
+    {\LARGE Parallelität auf Thread Ebene\\ \vspace*{1cm}Cache-Kohärenz}
+    \vspace*{2.5cm}
+
+	Temkeng Thibaut
+    \vspace*{1.5cm}
+
+    Datum der Abgabe: \today
+    \vspace*{2.5cm}
+
+
+    \begin{table}[h!]
+    	\centering
+    	\begin{tabular}{rc}
+    		Koautor: & Vannesa Kemeni Kabiwo \\
+    				 & Niko Maximilian Mazanec \\
+    		Erster Prüfer:	& Prof. Dr. Gundolf Kiefer\\
+    		Zweiter Prüfer:&Michael Schäferling\\
+    		
+    		
+    	\end{tabular}
+    \end{table}
+    Fakultät für Technische Informatik \\[1cm]
+
+  \end{center}
+
+\end{titlepage}
+\newpage
+\section{Einleitung}
+Heutzutage werden Computer mit einer einzigen Zentraleinheit (CPU) nur noch selten eingesetzt. Stattdessen geht der Trend zu Multiprozessorsystemen, bei denen mehrere CPUs in einem einzigen Rechner installiert sind, siehe Abbildung \ref{Paranut-Prozessor} und in jeder dieser CPUs sind ein oder mehrere Caches eingebettet. Ein Cache ist ein Speicher, der zum Zwischenspeichern von Daten dient
+
+
+Die Multiprozessorsysteme werden im Vergleich zu Mehrrechnersysteme immer mehr eingesetzt.
+Der große Unterschied zwischen Multiprozessorsysteme und Mehrrechnersysteme ist die Art und Weise,
+wie sie den Speicher nutzen. Während sich mehrere Prozessoren einen gemeinsame Speicher bzw. Hauptspeicher bei einem Multiprozessorsystem teilen,
+besitzt jeder Rechner einen eigenen Speicher bei einem Mehrrechnersystem und es verwendet ein Verbindungsnetzwerk, um Daten zwischen verschiedenen Computern auszutauschen. 
+
+\begin{figure}[h!]
+	\includegraphics[width=\columnwidth]{Paranut-Prozessor}
+	\caption{ParaNut-Prozessor}
+	\label{Paranut-Prozessor}
+\end{figure}
+\section{Konsistenz und Kohärenz}
+\section{Schreibstrategie}
+	\subsection{Write-Back }
+	\subsection{Writre-throught}
+\section{Cache Kohärenz Protokoll}
+	\subsection{Verzeichnisbasiert}
+	\subsection{Snoopingbasiert}
+		\subsubsection{MESI}
+		\subsubsection{MOESI}
+\section{Zusammenfassung}
+\newpage
+\begin{thebibliography}{lem00}
+	\bibitem{Paranut-Prozessor}
+		\href{https://ees.hs-augsburg.de/paranut/index.html}{Paranut-Prozessor}
+\end{thebibliography}
+\end{document}

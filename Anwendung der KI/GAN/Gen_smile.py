@@ -13,8 +13,8 @@ import Utils
 
 L = tf.keras.layers
 BATCH_SIZE = 32
-generator_for_all = Utils.get_generator(batch_size=BATCH_SIZE, image_size=(28, 28))
-nb_img = generator_for_all.n
+# generator_for_all = Utils.get_generator(batch_size=BATCH_SIZE, image_size=(28, 28))
+# nb_img = generator_for_all.n
 if os.path.exists('GAN'):
     shutil.rmtree('GAN')
 os.makedirs("GAN/images", exist_ok=True)
@@ -78,7 +78,8 @@ def define_gan(g_model, d_model):
 # load and prepare the training images
 def load_real_samples():
     # train_x, _ = next(Utils.get_generator(directory='data', image_size=(28, 28), batch_size=nb_img))
-    train_x = Utils.crops()
+    # train_x = Utils.crops()
+    train_x = np.load("smile_to_mnist.npy")
     train_x = train_x.astype('float32')
     return train_x
 
@@ -115,7 +116,7 @@ def generate_fake_samples(g_model, latent_dim, n_samples):
 
 
 # create and save a plot of generated images (reversed grayscale)
-def save_plot(examples, epoch, n=10):
+def save_plot(examples, epoch, n=8):
     # plot images
     for i in range(n * n):
         # define subplot
@@ -123,7 +124,8 @@ def save_plot(examples, epoch, n=10):
         # turn off axis
         pyplot.axis('off')
         # plot raw pixel data
-        pyplot.imshow(examples[i, :, :, 0], cmap='gray_r')
+        # pyplot.imshow(examples[i, :, :, 0], cmap='gray_r')
+        pyplot.imshow(examples[i, :, :, 0], cmap="gray")
     # save plot to file
     filename = 'GAN/images/' + str(BATCH_SIZE) + '_e%03d.png' % (epoch + 1)
     pyplot.savefig(filename)
@@ -152,7 +154,7 @@ def summarize_performance(epoch, g_model, d_model, dataset, latent_dim, n_sample
 
 
 # train the generator and discriminator
-def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=10000, n_batch=50):
+def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=20000, n_batch=50):
     bat_per_epo = int(dataset.shape[0] / n_batch)
     half_batch = int(n_batch / 2)
     # manually enumerate epochs
@@ -195,6 +197,5 @@ dataset = load_real_samples()
 # train model
 train(g_model, d_model, gan_model, dataset, latent_dim)
 
-# d_model.summary()
 if __name__ == '__main__':
     pass

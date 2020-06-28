@@ -114,9 +114,9 @@ export class MenuEntry {
             }
         }
     }
-    listener() {
+    listener(eventTypes = "click") {
         // console.log("La function:  ", this.function);
-        this.entry.addEventListener('click', this.function);
+        this.entry.addEventListener(eventTypes, this.function);
     }
 }
 export class menuApi {

@@ -1,0 +1,12 @@
+\babel@toc {ngerman}{}
+\babel@toc {ngerman}{}
+\contentsline {section}{\numberline {1}Einleitung}{3}{section.1}
+\contentsline {section}{\numberline {2}Datensatz}{3}{section.2}
+\contentsline {section}{\numberline {3}Autoencoder}{3}{section.3}
+\contentsline {subsection}{\numberline {3.1}Einfache Autoencoder}{4}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Deep Autoencoder}{5}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Convolution Autoencoder}{6}{subsection.3.3}
+\contentsline {section}{\numberline {4}Generative Adversarial Network}{7}{section.4}
+\contentsline {subsection}{\numberline {4.1}Vanilla GAN}{7}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Deep Convolutional GAN (DCGAN)}{8}{subsection.4.2}
+\contentsline {section}{\numberline {5}Zusammenfassung}{9}{section.5}

@@ -2,14 +2,12 @@ export interface Shape {
     zOrder: number;
     bgColor: string;
     bdColor: string;
-    isDragging: boolean;
     readonly id: number;
 
     object();
 
     draw(ctx: CanvasRenderingContext2D, selected?: boolean, color?: string);
 
-    // toString(): string;
 
     isInside(x: number, y: number): boolean;
 }
@@ -22,7 +20,7 @@ export interface ShapeManager {
     removeShapeWithId(id: number, redraw?: boolean): this;
 
     // chooseShapeAt(x: number, y: number, selected?: boolean): this;
-    chooseShapeAt(x: number, y: number, selected?: boolean, mode?: string);
+    chooseShapeAt(x: number, y: number, selected?: boolean,  toSelect?: { [p: number]: Shape });
 }
 
 export interface ShapeFactory {

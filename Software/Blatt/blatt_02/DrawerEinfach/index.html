@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Zeichenpogramm</title>
-    <link rel="stylesheet" href="style.css" type="text/css" />
+    <link rel="stylesheet" href="style.css" type="text/css"/>
 
     <script src="types.js" type="module"></script>
     <script src="Shapes.js" type="module"></script>
     <script src="ToolArea.js" type="module"></script>
     <script src="Canvas.js" type="module"></script>
-    <script src="script.js" type="module" ></script>
+    <script src="script.js" type="module"></script>
     <script src="init.js" type="module"></script>
 
 <body>
@@ -26,6 +26,14 @@
 
 <!--<canvas id="drawArea" width="900" height="800"></canvas>-->
 <canvas id="drawArea" width="500" height="500"></canvas>
+<br><br>
+<button id="clearButton" type="button">clear canvas</button>
+<form>
+    <label for="event">Event:</label>
+<!--    <input type="text" size="500" maxlength="500" id="event"/>-->
+    <input type="text"  id="event"/>
+</form>
+
 <p id="demo">' '</p>
 <ol id="pointList"></ol>
 

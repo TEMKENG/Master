@@ -21,8 +21,8 @@ function init() {
         removeShapeWithId(id, rd) {
             return canvas.removeShapeWithId(id, rd);
         },
-        chooseShapeAt(x, y, selected, mode) {
-            return canvas.chooseShapeAt(x, y, selected, mode);
+        chooseShapeAt(x, y, selected, toSelect) {
+            return canvas.chooseShapeAt(x, y, selected, toSelect);
         }
     };
     const shapesSelector = [

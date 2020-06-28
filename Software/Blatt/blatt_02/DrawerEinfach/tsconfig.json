@@ -6,5 +6,7 @@
   },
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "dependencies": {
+    "@feathersjs/feathers":"^4.5.3"}
 }

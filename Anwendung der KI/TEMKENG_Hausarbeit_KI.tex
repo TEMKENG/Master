@@ -1,0 +1,300 @@
+\documentclass[12pt,a4paper]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+% \usepackage[latin1]{inputenc} %  Alternativ unter Windows
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{url}
+
+\usepackage[pdftex]{graphicx}
+\usepackage{latexsym}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{ae,aecompl}
+\usepackage{blindtext}
+\setcounter{secnumdepth}{5}
+%\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{hyperref}
+\usepackage{acronym}
+\usepackage{subcaption}
+\usepackage[dvipsnames]{xcolor}
+%tikz
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata, matrix,chains,positioning,decorations.pathreplacing,arrows}
+
+\usepackage[linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}
+
+\usepackage{multicol}
+
+%\usepackage[demo]{graphicx}
+
+
+% Abstand obere Blattkante zur Kopfzeile ist 2.54cm - 15mm
+\setlength{\topmargin}{-15mm}
+
+
+
+\begin{document}
+	  % Keine Seitenzahlen im Vorspann
+	\pagestyle{empty}
+	
+	% Titelblatt der Arbeit
+	\begin{titlepage}
+		
+		\includegraphics[scale=0.3]{HSA_Logo_horizontal} 
+		\vspace*{2cm} 
+		
+		\begin{center} \large 
+			
+			Hausarbeit
+			\vspace*{2cm}
+			
+			%    {\large Extreme Low Resources Convolutional Network for Classifying Large-Scale Image Sets}
+			
+			{\LARGE Bildgenerierung mit neuronalen Netzen }
+			\vspace*{2.5cm}
+			
+				Temkeng Thibaut
+			\vspace*{1.5cm}
+			
+			Datum der Abgabe: \today
+			\vspace*{2.5cm}
+			
+			
+			    \begin{table}[h!]
+			    	\centering
+			    	\begin{tabular}{rc}
+			    		Betreuer: & Prof. Dr. Thomas Rist
+			    		
+			    		
+			    		
+			    	\end{tabular}
+			    \end{table}
+		Fakultät für Künstliche Intelligenz \\[1cm]
+			
+		\end{center}
+	\end{titlepage}
+\newpage
+\tableofcontents
+\newpage
+\section{Einleitung}
+Die neuronalen Netze (NN) haben vor paar Jahren mehrere Bereiche insbesondere den Bereich der Bildverarbeitung revolutioniert. Die Methoden mit NNs haben sogar viele andere Methoden einfach obsolet gemacht. 
+Die NNs scheinen besser zu funktionieren, wenn es viele Daten zum Training gibt. Aber es ist nicht immer möglich ausreichend Daten zu sammeln. Um diesen Datenmangel zu beheben, werden synthetische Daten generiert.In dieser Arbeit werden zwei spezielle Arten künstlicher neuronaler Netze zur Bildgenerierung erläutert: Autoencoder \ref{Autoencoder} und Generativ Adversarial Network (GAN) \ref{GAN}.
+\section{Datensatz}\label{Datensatz}
+Um unsere NNs zu trainieren und zu evaluieren, den MNIST-Datensatz\ref{mnist}\cite{MNIST} und den Smile-Datensatz\ref{smile} verwendet. MNIST-Datensatz besteht aus $ (60.000, 28, 28) $ Bildern zum Training und $ (10.000, 28, 28) $ Bildern zum Testen während Smile-Datensatz nur aus $ (400, 28, 28) $ zum Training und $ (17, 28, 28) $ zum Testen besteht.
+
+\begin{figure}[h!]
+	\includegraphics[width=\columnwidth]{mnist}
+	\caption{MNIST-Datensatz}
+	\label{mnist}
+\end{figure}
+\begin{figure}[h!]
+	\includegraphics[width=\columnwidth]{smile}
+	\caption{Smile Datensatz}
+	\label{smile}
+\end{figure}
+
+
+
+\section{Autoencoder}\label{Autoencoder}
+Ein \textit{Autoencoder} ist eine Art künstliches neuronales Netzwerk, das dazu dient, effiziente Datencodierungen unbeaufsichtigt zu lernen\cite{autoencoderDef}.
+Ein Autoencoder besteht hauptsächlich aus folgenden Teilen:
+
+\begin{enumerate}
+	\item Der \textit{Encoder}, der lernt, wie man die Eingabedimensionen reduzieren und die Eingabedaten in eine kodierte Darstellung komprimieren kann.
+	\item Der \textit{Decoder},der Decoder lernt, wie er die Daten aus der kodierten Darstellung rekonstruieren kann, um der ursprünglichen Eingabe so nahe wie möglich zu kommen.
+	\item Die Verlustfunktion auch Rekonstruktionsverlust genannt, mit der es gemessen wird, wie gut der Decoder arbeitet und wie nahe der Ausgang am ursprünglichen Eingang liegt.
+\end{enumerate}
+\begin{figure}[h!]
+	\includegraphics[width=\columnwidth]{autoencoderArchitectur.png}
+	\caption{Autoencoder Architektur \href{https://blog.keras.io/building-autoencoders-in-keras.html}{source}}
+	\label{autoencoderArchitectur}
+\end{figure}
+
+Der Autoencoder bekommt Daten als Eingabe und er versucht, dieselbe bzw. eine sehr ähnliche Eingabe zu rekonstruieren.  siehe Abbildung \ref{autoencoderArchitectur}
+\subsection{Einfache Autoencoder}\label{Einfache Autoencoder}
+Ein einfachste Autoencoder besteht nur aus drei Schichten: Eingabeschicht, versteckte Schicht und eine Ausgabeschicht. Siehe Abbildung \ref{Simple_Autoencoder_model} (Links).
+Nach 100 Epochen von Training des Autoencoder \ref{Einfaches Autoencoder-Modell} auf MNIST-Datensatz erhalten wir \ref{Originale und generierte Bilder aus MNIST-Datensatz} (Rechts), wobei die Eingabebilder oben sind und die generierten Bilder unter sind. Die generierten Bilder entsprechen leider nicht den Originalen, aber sie sind schon erkennbar.
+\begin{figure}[h!]
+	\begin{subfigure}{0.5\columnwidth}
+		\includegraphics[width=\columnwidth]{Simple_Autoencoder_model}
+		\caption{Einfaches Autoencoder-Modell}
+		\label{Einfaches Autoencoder-Modell}
+	\end{subfigure}
+	\begin{subfigure}{0.5\columnwidth}
+		\includegraphics[width=\columnwidth]{Simple_Autoencoder_bild}
+		\caption{Originale und generierte Bilder aus MNIST-Datensatz}
+		\label{Originale und generierte Bilder aus MNIST-Datensatz}
+	\end{subfigure}
+	\caption{Einfache Autoencoder}
+	\label{Simple_Autoencoder_model}
+\end{figure}
+Wenn man jedoch derselbe Autoencoder zum Trainieren von Smile-Datensatz verwendet, erhalten wir den linken Teil der Abbildung \ref{smile_Autoencoder_model} nach $ 4.000 $ Epochen. Obwohl er zu viel und zu lange trainiert wurde, kann er den Input nicht rekonstruieren und dass sollte an folgenden liegen:
+\begin{enumerate}
+	\item Der Smile-Datensatz ist zu klein.siehe \ref{Datensatz}
+	\item Jede Sample aus Smile-Datensatz enthält zu viel \glqq unnötige\grqq {} Informationen, und zwar den ganzen weißen Bereich, der eigentlich nur aus Pixeln mit $ 255 $ als Werte bestehen. Diese Werte haben auch einen großen Einfluss, denn sie sind wegen ihrer großen Anzahl nicht einfach vorherzusagen. 
+\end{enumerate} 
+Um diese Problem zu lösen, haben wir alle 255 Werte in $ 0 $ und alle andere Werte in 1 umgewandelt. Im rechten Teil der Abbildung \ref{smile_Autoencoder_model} kann eine deutliche Verbesserung wahrgenommen werden, obwohl wir nur 700 Epochen durchgelaufen sind.
+\begin{figure}[h!]
+	\includegraphics[width=0.5\columnwidth]{Simple_Autoencoder_bild1}
+	\includegraphics[width=0.5\columnwidth]{Simple_Autoencoder_bild2}
+	\caption{Smile mit einfache Autoencoder}
+	\label{smile_Autoencoder_model}
+\end{figure}
+\subsection{Deep Autoencoder}
+Je tiefer sind die NNs, desto besser sind sie in der Lage, komplexere Daten zu verarbeiten. 
+Eine Erweiterung des einfachen Autoencoders\ref{Einfache Autoencoder} ist der tiefe (Deep)  Autoencoder (DAE). Der einzige Unterschied zwischen Einfachen und tiefen Autoencoder  besteht in der Anzahl der verborgenen Schichten. Die zusätzlichen versteckten Schichten ermöglichen es dem Autoencoder, mathematisch komplexere zugrundeliegende Muster in den Daten zu lernen. Die erste Schicht des DAEs kann Merkmale erster Ordnung in der Rohdateneingabe lernen (wie z.B. Kanten in einem Bild). Die zweite Schicht kann Merkmale zweiter Ordnung lernen, die Mustern im Erscheinungsbild von Merkmalen erster Ordnung entsprechen (z.B. im Hinblick darauf, welche Kanten dazu neigen, zusammen aufzutreten - z.B. zur Bildung von Kontur- oder Eckendetektoren). Tiefere Schichten des DAEs neigen dazu, sogar Merkmale höherer Ordnung zu lernen.
+
+\begin{figure}[h!]
+	\begin{subfigure}{.5\textwidth}
+			\includegraphics[width=\columnwidth]{Deep_autoencoder_model}
+			\caption{Deep autoencoder model}
+			\label{Deep autoencoder_model}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\includegraphics[width=\columnwidth]{Deep_autoencoder_bilder}
+		\caption{Original und generierte Bilder (MNIST-Datensatz)}
+		\label{Original und generierte Bilder (MNIST-Datensatz)}
+		\includegraphics[width=\columnwidth]{Deep_autoencoder_bilder2}
+		\caption{Original und generierte Bilder (Smile-2-Datensatz).}
+		\label{Deep_autoencoder_bilder}
+	\end{subfigure}
+	
+	\caption{Deep Autoencoder }
+	\label{Deep_autoencoder_model}
+\end{figure}
+Ein Beispiel für ein tiefes Autoencoder-Modell ist in der Abbildung \ref{Deep autoencoder_model} zu sehen. Die Anzahl von Parameter von Deep-Autoencoder im Vergleich zu einfachen Autoencoder ist enorm ($ 50.992  $ gegen $ 222.384 $), was eine noch länger Trainingszeit verlangt. Wenn man aber die Abbildungen \ref{Original und generierte Bilder (MNIST-Datensatz)}, \ref{Deep_autoencoder_bilder} und \ref{Originale und generierte Bilder aus MNIST-Datensatz}, \ref{smile_Autoencoder_model} vergleicht, stellt man schnell fest, die Deep Autoencoder-Modelle ihre Eingaben besser rekonstruieren können.
+\subsection{Convolution Autoencoder}
+Die oben beschriebenen Autoencoder berücksichtigen nicht die Tatsache, dass ein Signal als Summe anderer Signale gesehen werden kann und versuchen sich auch die Position von Merkmalen zu merken, was zu eine sehr schlechte Leistung führen kann, wenn man dieselbe Trainingsdaten nimmt und leichter verschiebt. Um diesen Problemen entgegenzuwirken, wenn vollständigen verbundene Schichte (\textit{fully connected layer}) durch Faltungsschichten (\textit{Convolution layer}) ersetzen, die die Filterung eines Eingangssignals ermöglichen, um einen Teil seines Inhalts zu extrahieren und dadurch entstand eine andere Variante von Autoencoder, die Faltung-Autoencoder (\textit{convolution autoencoder}). Obwohl diese Variante viele Schichte enthält, verwendet sie zu weniger Parameter (4.385). siehe Abbildung \ref{Convolutional_autoencoder_modell}.
+
+\begin{figure}[h!]
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\columnwidth]{Convolutional_autoencoder_modell}
+		\caption{Convolutional Autoencoder Modell}
+		\label{Convolutional_autoencoder_modell}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\columnwidth]{Convolutional_autoencoder_bilder}
+		\caption{Original und generierte Bilder (MNIST-Datensatz)}
+		\label{Original und generierte Bilder (MNIST-Datensatz) con}
+		\includegraphics[width=\columnwidth]{Convolutional_autoencoder_bilder1}
+		\caption{Original und generierte Bilder (Smile-2-Datensatz).}
+		\label{Convolution_autoencoder_bilder}
+	\end{subfigure}
+\end{figure}
+Die gleichen Experimente wie oben wurden mit Faltung-Autoencoder-Modell durchgeführt und es ergibt sich die Abbildungen \ref{Original und generierte Bilder (MNIST-Datensatz) con} und \ref{Convolution_autoencoder_bilder}. Aus Experimenten kommt auch heraus, dass das Training von Faltung-Autoencoder $ 30x $ länger als das von anderen Modellen dauern und weniger Epochen brauchen.
+
+\section{Generative Adversarial Network}\label{GAN}
+
+\textit{Generative Adversarial Networks} (erzeugende gegnerische Netzwerke) (GANs)  sind eine leistungsstarke Klasse von neuronalen Netzwerken, die für unüberwachtes Lernen eingesetzt werden. Sie wurde 2014 von Ian J. Goodfellow entwickelt und eingeführt. GANs bestehen im Wesentlichen aus einem System von zwei konkurrierenden neuronalen Netzmodellen (einen Generator und einen Diskriminator ), die miteinander konkurrieren und in der Lage sind, die Variationen innerhalb einer Datenbank zu analysieren, zu erfassen und zu kopieren \cite{GAN}.
+ Der Generator bekommt zufällige uniforme Daten und generiert gefälschte Daten, die mit Samplen aus Trainingsdatensatz sehr ähnlich sind  und versucht damit den Diskriminator zu täuschen.
+ Der Diskriminator hingegen versucht, zwischen echten und gefälschten Proben zu unterscheiden. Ein  allgemeine Architektur von GAN kann aus der Abbildung \ref{Generative Adversarial Networks Architektur}.\\
+ 
+\begin{figure}[h!]
+	\includegraphics[width=\columnwidth]{gan} 
+	
+	\caption{Generative Adversarial Networks Architektur}
+	\label{Generative Adversarial Networks Architektur}
+\end{figure}
+
+Es gibt heutzutage sehr viele Versionen von GAN und werden in folgenden mehr nur auf  zwei davon eingehen
+\subsection{Vanilla GAN}
+Vanilla GAN ist der einfachste Typ von GAN. Hier sind der Generator und der Diskriminator einfache Multi-Layer-Perzeptrons, siehe Abbildung \ref{Vanilla Gan} .
+
+\begin{figure}[h!]
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\columnwidth]{generator}
+		\caption{Generator Modell}
+		\label{generator}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+	\includegraphics[width=\columnwidth]{discriminator}
+	\caption{Discriminator Modell}
+	\label{discriminator}
+\end{subfigure}
+\caption{Vanilla GAN Modell}
+\label{Vanilla Gan}
+\end{figure}
+Eine kurzer Überblick von  Bildern, die Mit Vanilla GAN generiert wurden, ist in der Abbildung \ref{Generierte Bilder mit Vanilla GAN} zu finden. Man stellt auch fest, dass die generierten Bilder im Vergleich zu Bildern, die mit Autoencoder generiert wurden, nicht so ähnlich wie die Bilder aus dem originalen Datensatz aussehen. Unter Betrachtung der generierten Bildern lässt sich sagen, dass die GAN beim Problem vom Datenmangel besser helfen, denn die generierten Bilder von GAN Merkmale enthalten, die in Trainingsbilder auch vorhanden sind und die GANs können leichter verschiedene Versionen eines Bildes erzeugen.
+\begin{figure}[h!]
+	\includegraphics[width=\columnwidth]{generatorb2}
+	\caption{Generierte Bilder mit Vanilla GAN}
+	\label{Generierte Bilder mit Vanilla GAN}
+\end{figure}
+\subsection{Deep Convolutional GAN (DCGAN)}
+Deep Convolutional GAN (DCGAN) \cite{DCGAN} ist die populärste Version von GAN. Es verwendet sowohl die vollständigen verbundenen Schichten als auch die Faltungsschite , um Daten bzw. Bilder zu generieren.Ein Beispiel von DCGAN-Modell kann in der Abbildung \ref{Deep Convolutional GAN} entnehmen werden.
+\begin{figure}[h!]
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\columnwidth]{generator1}
+		\caption{Deep Generator Modell}
+		\label{generator1}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\columnwidth]{discriminator1}
+		\caption{Deep Discriminator Modell}
+		\label{discriminator1}
+	\end{subfigure}
+	\caption{Deep Convolutional GAN-Modell}
+	\label{Deep Convolutional GAN}
+\end{figure}
+Aus der Abbildung \ref{Generierte Bilder mit DCGAN} stellt man fest, dass das NN sich in Laufe des Trainings immer bessern. Wenn man die Abbildungen \ref{Generierte Bilder mit DCGAN} und \ref{Generierte Bilder mit Vanilla GAN} kommt heraus, dass die DCGAN Merkmale aus Datensatz besser als Vanilla GAN generalisieren können.
+\begin{figure}[h!]
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\columnwidth]{32_e01000}
+		\caption{1000 Iterationen}
+		\label{generator2}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\columnwidth]{32_e20000}
+		\caption{ 20000 Iterationen}
+		\label{discriminator2}
+	\end{subfigure}
+	\caption{Generierte Bilder mit DCGAN (Smile-2)}
+	\label{Generierte Bilder mit DCGAN}
+\end{figure}
+
+Die DCGAN-Modelle ergeben zwar gute Ergebnisse, aber benötigt auch zu viel Trainingszeit und Ressourcen im Vergleich zu anderen Verfahren.
+\begin{figure}[h!]
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\columnwidth]{generated_plot_e500}
+		\caption{ 500 Iterationen}
+		\label{generator3}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\columnwidth]{generated_plot_e5000}
+		\caption{ 5000 Iterationen}
+		\label{discriminator3}
+	\end{subfigure}
+	\caption{Generierte Bilder mit DCGAN (MNIST)}
+	\label{Generierte Bilder mit DCGAN (MNIST)}
+\end{figure}
+
+\section{Zusammenfassung}
+Die Verwundung von neuronalen Netzen ist eine gute Möglichkeit, um synthetische Bilder zu generieren, die viele Ähnlichkeiten mit den Trainingsdaten haben. Man unterscheidet heutzutage zwei große Klasse von neuronalen Netzen zur Bildgenerierung: \textit{Autoencoder} und \textit{GAN}, die sich am meisten in der Architektur und die Art und Weise, wie sie trainiert sind, unterscheiden. Obwohl sie sehr gute Ergebnisse liefern, werden sie schnell problematisch, wenn es um Ressourcen und Training geht.
+Man kann eigentlich nie vorhersagen, wann man mit Training fertig ist, ohne selber die Qualität des Generators zu testen und wenn die generierten Daten z.B auf ein Klassifikationsproblem angewandt, haben wir noch das Problem, dass es zuerst geprüft werden soll, ob die generierten Daten erstens akzeptabel und zweitens welcher Klasse sie zugeordnet werden sollen und leider muss diese Nacharbeit sehr oft per Hand gemacht werden.
+
+\newpage
+\bibliographystyle{acm}
+
+\begin{thebibliography}{lem00}
+	\bibitem{MNIST}
+		Yann LeCun, et al.
+		\href{https://yann.lecun.com/exdb/mnist/}{ MNIST Database of Handwritten Digits}
+	\bibitem{autoencoderDef}
+		\href{https://en.wikipedia.org/wiki/Autoencoder}{Autoencoder}
+	\bibitem{convolutionAuto}
+		\href{https://pgaleone.eu/neural-networks/2016/11/24/convolutional-autoencoders/}{convolutional autoencoder}
+	\bibitem{GAN}
+		\href{https://www.geeksforgeeks.org/generative-adversarial-network-gan/}{Generative Adversarial Networks}
+	\bibitem{Vanilla GAN}
+		Ian Goodfellow, et al.
+		\href{https://arxiv.org/abs/1406.2661}{ Generative Adversarial Networks. NIPS 2014}
+	\bibitem{DCGAN}
+		Alec Radford and Luke Metz
+		\href{https://arxiv.org/pdf/1511.06434.pdf}{unsupervised representation learning with deep convolutional generative adversarial networks}
+	
+\end{thebibliography}
+\end{document}

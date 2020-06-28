@@ -135,9 +135,9 @@ export class MenuEntry {
         }
     }
 
-    listener() {
+    listener(eventTypes: string = "click") {
         // console.log("La function:  ", this.function);
-        this.entry.addEventListener('click', this.function);
+        this.entry.addEventListener(eventTypes, this.function);
     }
 }
 

@@ -14,6 +14,7 @@ Dies könnte zu einer relativ niedrigen Durchschnittsgeschwindigkeit führen, mi
 
 
 
+
 --Kollision
 
 	Die Verwaltung von gemeinsamem Speicher oder vom Bus bleibt einer der großen Herausforderungen beim Einsatz von Multiprozessorsysteme,
@@ -45,3 +46,14 @@ gemeinsamen Speicher haben.
 Cache-Kohärenz ist eine Beziehung zwischen den verschiedenen
 Caches in einem Multiprozessorsystem.
 https://ess.cs.tu-dortmund.de/Teaching/SS2019/BS/Downloads/12-Multiprozessorsysteme.pdf
+
+Motivation:
+	--Rechner haben heutzutage nicht mehr nur ein CPU, sondern mehrere Multicoresysteme sind.
+	--Sie haben Cache, die dafür sorgen, dass  Rechner effizient und schneller sind
+		-->Sie müssen jedoch konsistenz und Kohärenz sein
+	
+
+Cache:
+	Der Cache ist ein Speicher, der zum Zwischenspeichern von Daten dient (Puffer).
+	Beim Prozessorcache sorgt ein schneller Cache dafür, daß der Prozessor nicht darauf warten muß, bis einzelne Zugriffe auf den langsameren Hauptspeicher ausgeführt worden sind
+	link: https://www.computerlexikon.com/was-ist-cache#:~:text=Der%20Cache%20%28franz%C3%B6sisch%20%C2%BBVersteck%C2%AB%2C%20sprich%20%22%20kasch%20%22%29,eine%20Vielzahl%20von%20kleinen%20Zugriffen%20auf%20dieselbe%20Datenmenge.
