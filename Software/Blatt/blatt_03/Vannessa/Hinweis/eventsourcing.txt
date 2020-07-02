@@ -1,0 +1,6 @@
+creer une interface ShapeEvent dans type.ts --> definit les differents types
+de event comme dans Shapemanager
+
+creer l interface shapeManagerEventBased avec la methode apply
+Faire en sorte que canvas herite de shapeManagerEvetBased, ainsi on pourra
+tjrs utiliser les methodes de shapemanager
