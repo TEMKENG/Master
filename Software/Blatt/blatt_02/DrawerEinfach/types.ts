@@ -1,7 +1,10 @@
+import {ShapeEvent} from "./Events.js";
+
 export interface Shape {
     zOrder: number;
     bgColor: string;
     bdColor: string;
+    selected:boolean;
     readonly id: number;
 
     object();
@@ -13,14 +16,24 @@ export interface Shape {
 }
 
 export interface ShapeManager {
-    addShape(shape: Shape, redraw?: boolean): this;
-
-    removeShape(shape: Shape, redraw?: boolean): this;
-
-    removeShapeWithId(id: number, redraw?: boolean): this;
+    //
+    // addShape(shape: Shape, redraw?: boolean): this;
+    //
+    // removeShape(shape: Shape, redraw?: boolean): this;
+    //
+    // removeShapeWithId(id: number, redraw?: boolean): this;
 
     // chooseShapeAt(x: number, y: number, selected?: boolean): this;
-    chooseShapeAt(x: number, y: number, selected?: boolean,  toSelect?: { [p: number]: Shape });
+
+    // unselectShape(id: number);
+
+    addShape(shape: Shape, redraw?: boolean, move?:boolean);
+
+    removeShape(shape: Shape, redraw?: boolean);
+
+    removeShapeWithId(id: number, redraw?: boolean);
+
+    chooseShapeAt(x: number, y: number, selected?: boolean, toSelect?: { [p: number]: Shape });
 }
 
 export interface ShapeFactory {
@@ -31,4 +44,10 @@ export interface ShapeFactory {
     handleMouseUp(x: number, y: number);
 
     handleMouseMove(x: number, y: number);
+}
+
+
+export interface ShapeManagerEventBased {
+    // apply(e: ShapeEvent): this
+    apply(e: ShapeEvent);
 }

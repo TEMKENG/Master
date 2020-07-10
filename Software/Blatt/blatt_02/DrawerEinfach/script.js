@@ -167,11 +167,25 @@ export class menuApi {
 }
 export class setupContextMenu {
     constructor(factory, main_menu_name) {
+        console.log("qubjkjfs");
         // Menu instansieren
         let menu = factory.createMenu(main_menu_name);
         // Menueinträge hinzufügen
-        let radioOption = factory.createRadioOption("Hintergrundfarbe", { "green": "Green", "red": "Red", "yellow": 'Yellow', "transparent": 'Transparent' }, "red");
-        let radioOption1 = factory.createRadioOption("Randfarbe", { "blue": 'Blue', "black": 'Black', "orange": 'Orange' }, "blue");
+        let radioOption = factory.createRadioOption("Hintergrundfarbe", {
+            "red": "Red",
+            "blue": 'Blue',
+            "black": 'Black',
+            "green": "Green",
+            "yellow": 'Yellow',
+            "transparent": 'Transparent'
+        }, "red");
+        let radioOption1 = factory.createRadioOption("Randfarbe", {
+            "red": 'Red',
+            "blue": 'Blue',
+            "black": 'Black',
+            "yellow": 'Yellow',
+            "orange": 'Orange',
+        }, "blue");
         const separators = [factory.createSeparator(), factory.createSeparator(), factory.createSeparator()];
         const deleteEntry = factory.createItem('Delete', 'li', null);
         const z_plus = factory.createItem('+Z', 'li', null);
@@ -197,7 +211,7 @@ export class setupContextMenu {
             "Randfarbe": radioOption1,
             "Z": [z_minus, z_plus]
         };
-        console.log('grobe check: ', menusCopy.length, menu.m.childNodes);
+        // console.log('grobe check: ', menusCopy.length, menu.m.childNodes);
     }
 }
 function setCanvasColour(ev) {

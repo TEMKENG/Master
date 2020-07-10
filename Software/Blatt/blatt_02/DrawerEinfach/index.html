@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Zeichenpogramm</title>
     <link rel="stylesheet" href="style.css" type="text/css"/>
-
     <script src="types.js" type="module"></script>
     <script src="Shapes.js" type="module"></script>
     <script src="ToolArea.js" type="module"></script>
@@ -26,15 +25,18 @@
 
 <!--<canvas id="drawArea" width="900" height="800"></canvas>-->
 <canvas id="drawArea" width="500" height="500"></canvas>
+<textarea id="events" rows="31" cols="70"></textarea>
 <br><br>
-<button id="clearButton" type="button">clear canvas</button>
 <form>
-    <label for="event">Event:</label>
-<!--    <input type="text" size="500" maxlength="500" id="event"/>-->
-    <input type="text"  id="event"/>
+    <label for="event">Aktuelles Ereignis:</label>
+    <input type="text"  id="event" size="75" style="text-align: center"/>
 </form>
+<button id="loadButton" type="button">Load Events</button>
+<button id="clearButton" type="button">clear canvas</button>
+
 
 <p id="demo">' '</p>
+<pre id="console"></pre>
 <ol id="pointList"></ol>
 
 </body>

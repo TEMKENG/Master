@@ -6,6 +6,9 @@ class Point2D {
     toString() {
         return '{"x": ' + this.x + ', "y": ' + this.y + '}';
     }
+    equal(otherPoint) {
+        return this.toString() === otherPoint.toString();
+    }
 }
 class AbstractShape {
     // static bdColor: string;
@@ -58,6 +61,7 @@ export class Line extends AbstractShape {
         this.zOrder = undefined;
         this.bdColor = undefined;
         this.bgColor = undefined;
+        this.selected = false;
     }
     toString() {
         let data = '{"from": ' + this.from.toString() + "," +
@@ -80,6 +84,8 @@ export class Line extends AbstractShape {
         from["y"] = this.from.y;
         data["from"] = from;
         data["to"] = to;
+        data["to"] = this.to;
+        data["from"] = this.from;
         data["zOrder"] = this.zOrder;
         data["bgColor"] = this.bgColor;
         data["fgColor"] = this.bdColor;
@@ -134,15 +140,16 @@ class Circle extends AbstractShape {
         this.zOrder = undefined;
         this.bdColor = undefined;
         this.bgColor = undefined;
+        this.selected = false;
     }
     object() {
         let center = {};
-        let from = {};
         let data = {};
         let shape = {};
         center["x"] = this.center.x;
         center["y"] = this.center.y;
         data["center"] = center;
+        data["center"] = this.center;
         data["radius"] = this.radius;
         data["zOrder"] = this.zOrder;
         data["bgColor"] = this.bgColor;
@@ -209,6 +216,7 @@ class Rectangle extends AbstractShape {
         this.zOrder = undefined;
         this.bdColor = undefined;
         this.bgColor = undefined;
+        this.selected = false;
     }
     object() {
         let to = {};
@@ -219,8 +227,10 @@ class Rectangle extends AbstractShape {
         to["y"] = this.to.y;
         from["x"] = this.from.x;
         from["y"] = this.from.y;
-        data["from"] = from;
         data["to"] = to;
+        data["from"] = from;
+        data["to"] = this.to;
+        data["from"] = this.from;
         data["zOrder"] = this.zOrder;
         data["bgColor"] = this.bgColor;
         data["fgColor"] = this.bdColor;
@@ -262,7 +272,12 @@ class Rectangle extends AbstractShape {
         ctx.strokeStyle = oldStroke;
     }
     isInside(x, y) {
-        return (x >= this.from.x && x <= this.to.x && y >= this.from.y && y <= this.to.y);
+        function minMax(a, b) {
+            return a < b ? [a, b] : [b, a];
+        }
+        let [minX, maxX] = minMax(this.from.x, this.to.x);
+        let [minY, maxY] = minMax(this.from.y, this.to.y);
+        return (x >= minX && x <= maxX && y >= minY && y <= maxY);
     }
 }
 export class RectangleFactory extends AbstractFactory {
@@ -300,6 +315,9 @@ class Triangle extends AbstractShape {
         data["p1"] = p1;
         data["p2"] = p2;
         data["p3"] = p3;
+        data["p1"] = this.p1;
+        data["p2"] = this.p2;
+        data["p3"] = this.p3;
         data["zOrder"] = this.zOrder;
         data["bgColor"] = this.bgColor;
         data["fgColor"] = this.bdColor;
@@ -441,24 +459,19 @@ export class ChooseShape {
     handleMouseMove(x, y) {
         this.tmpTo = new Point2D(x, y);
         if (this.move === true) {
-            // this.movableShape = this.shapeManager.chooseShapeAt(x, y, true, "move");
-            // console.log("Mouve: ", this.movableShape, this.tmpMovableShape);
             let diff = this.distance(this.from, this.tmpTo);
             for (let id of Object.keys(this.movableShape)) {
                 let shape = this.createShape(diff.dx, diff.dy, this.movableShape[id]);
                 this.tmpMovableShape[shape.id] = shape;
                 this.shapeManager.removeShapeWithId(+id, false);
-                this.shapeManager.addShape(shape);
+                this.shapeManager.addShape(shape, false, true);
             }
-            // this.shapeManager.chooseShapeAt(x, y, true, null);
             this.shapeManager.chooseShapeAt(x, y, true, this.tmpMovableShape);
             this.movableShape = this.tmpMovableShape;
             this.tmpMovableShape = {};
-            // console.log("Mouve ende: ", this.movableShape, this.tmpMovableShape);
         }
         else {
             this.movableShape = this.shapeManager.chooseShapeAt(x, y);
-            // console.log("ICI", this.move, tmp);
         }
         this.from = this.tmpTo;
     }
@@ -496,6 +509,7 @@ export class ChooseShape {
         newShape.zOrder = oldShapeData.zOrder;
         newShape.bdColor = oldShapeData.fgColor;
         newShape.bgColor = oldShapeData.bgColor;
+        newShape.selected = true;
     }
     distance(from, to) {
         return { dx: to.x - from.x, dy: to.y - from.y };
