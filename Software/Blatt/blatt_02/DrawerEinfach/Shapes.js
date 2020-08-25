@@ -1,3 +1,4 @@
+console.log("Shapes Class");
 class Point2D {
     constructor(x, y) {
         this.x = x;
@@ -11,12 +12,8 @@ class Point2D {
     }
 }
 class AbstractShape {
-    // static bdColor: string;
-    // static bgColor: string;
-    constructor() {
-        this.id = AbstractShape.counter++;
-        // AbstractShape.bgColor = undefined;
-        // AbstractShape.bdColor = undefined;
+    constructor(id) {
+        this.id = id != undefined ? id : AbstractShape.counter++;
     }
 }
 AbstractShape.counter = 0;
@@ -53,15 +50,14 @@ class AbstractFactory {
         }
     }
 }
-export class Line extends AbstractShape {
-    constructor(from, to) {
-        super();
+class Line extends AbstractShape {
+    constructor(from, to, id, clientId) {
+        super(id);
         this.from = from;
         this.to = to;
-        this.zOrder = undefined;
-        this.bdColor = undefined;
-        this.bgColor = undefined;
+        this.label = "Line";
         this.selected = false;
+        this.clientId = clientId;
     }
     toString() {
         let data = '{"from": ' + this.from.toString() + "," +
@@ -133,14 +129,13 @@ export class LineFactory extends AbstractFactory {
     }
 }
 class Circle extends AbstractShape {
-    constructor(center, radius) {
-        super();
+    constructor(center, radius, id, clientId) {
+        super(id);
         this.center = center;
         this.radius = radius;
-        this.zOrder = undefined;
-        this.bdColor = undefined;
-        this.bgColor = undefined;
+        this.label = "Circle";
         this.selected = false;
+        this.clientId = clientId;
     }
     object() {
         let center = {};
@@ -209,14 +204,13 @@ export class CircleFactory extends AbstractFactory {
     }
 }
 class Rectangle extends AbstractShape {
-    constructor(from, to) {
-        super();
+    constructor(from, to, id, clientId) {
+        super(id);
         this.from = from;
         this.to = to;
-        this.zOrder = undefined;
-        this.bdColor = undefined;
-        this.bgColor = undefined;
+        this.label = "Rectangle";
         this.selected = false;
+        this.clientId = clientId;
     }
     object() {
         let to = {};
@@ -290,15 +284,14 @@ export class RectangleFactory extends AbstractFactory {
     }
 }
 class Triangle extends AbstractShape {
-    constructor(p1, p2, p3) {
-        super();
+    constructor(p1, p2, p3, id, clientId) {
+        super(id);
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
-        this.zOrder = undefined;
-        this.bdColor = undefined;
-        this.bgColor = undefined;
+        this.label = "Triangle";
         this.selected = false;
+        this.clientId = clientId;
     }
     object() {
         let p1 = {};
@@ -446,15 +439,13 @@ export class ChooseShape {
         this.from = new Point2D(x, y);
         this.movableShape = this.shapeManager.chooseShapeAt(x, y, true);
         this.move = Object.keys(this.movableShape).length > 0;
-        console.log("Result of down: ", this.movableShape);
-        // this.movableShape = {};
+        // console.log("Result of down: ", this.movableShape);
     }
     handleMouseUp(x, y) {
         this.movableShape = this.shapeManager.chooseShapeAt(x, y);
-        // console.log("handleMouseUp", );
         this.move = undefined;
         this.from = undefined;
-        console.log("Resultof up: ", this.movableShape);
+        // console.log("Resultof up: ", this.movableShape);
     }
     handleMouseMove(x, y) {
         this.tmpTo = new Point2D(x, y);
@@ -463,7 +454,7 @@ export class ChooseShape {
             for (let id of Object.keys(this.movableShape)) {
                 let shape = this.createShape(diff.dx, diff.dy, this.movableShape[id]);
                 this.tmpMovableShape[shape.id] = shape;
-                this.shapeManager.removeShapeWithId(+id, false);
+                this.shapeManager.removeShapeWithId(+id, false, true);
                 this.shapeManager.addShape(shape, false, true);
             }
             this.shapeManager.chooseShapeAt(x, y, true, this.tmpMovableShape);
@@ -475,28 +466,28 @@ export class ChooseShape {
         }
         this.from = this.tmpTo;
     }
-    createShape(dx, dy, oldShape) {
+    createShape(dx, dy, oldShape, ID) {
         let object = oldShape.object();
         let data = object.data;
-        let shape = undefined;
+        let shape;
         if (object.type === "Triangle") {
             let p1 = this.pointUpdate(data.p1, dx, dy);
             let p2 = this.pointUpdate(data.p2, dx, dy);
             let p3 = this.pointUpdate(data.p3, dx, dy);
-            shape = new Triangle(p1, p2, p3);
+            shape = new Triangle(p1, p2, p3, ID);
         }
         else if (object.type === "Circle") {
             let center = this.pointUpdate(data.center, dx, dy);
-            shape = new Circle(center, data.radius);
+            shape = new Circle(center, data.radius, ID);
         }
         else {
             let to = this.pointUpdate(data.to, dx, dy);
             let from = this.pointUpdate(data.from, dx, dy);
             if (object.type === "Line") {
-                shape = new Line(from, to);
+                shape = new Line(from, to, ID);
             }
             else if (object.type === "Rectangle") {
-                shape = new Rectangle(from, to);
+                shape = new Rectangle(from, to, ID);
             }
         }
         this.shapeUpdate(data, shape);
@@ -527,4 +518,5 @@ function selected_draw(ctx, points, color) {
     ctx.fillStyle = oldFillStroke;
     ctx.strokeStyle = oldStroke;
 }
+export { Point2D, Line, Triangle, Circle, Rectangle };
 //# sourceMappingURL=Shapes.js.map

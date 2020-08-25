@@ -1,10 +1,12 @@
 import {ShapeEvent} from "./Events.js";
 
 export interface Shape {
+    label: string;
     zOrder: number;
     bgColor: string;
     bdColor: string;
-    selected:boolean;
+    clientId: number;
+    selected: boolean;
     readonly id: number;
 
     object();
@@ -27,11 +29,11 @@ export interface ShapeManager {
 
     // unselectShape(id: number);
 
-    addShape(shape: Shape, redraw?: boolean, move?:boolean);
+    addShape(shape: Shape, redraw?: boolean, move?: boolean);
 
     removeShape(shape: Shape, redraw?: boolean);
 
-    removeShapeWithId(id: number, redraw?: boolean);
+    removeShapeWithId(id: number, redraw?: boolean, fromButton?: boolean);
 
     chooseShapeAt(x: number, y: number, selected?: boolean, toSelect?: { [p: number]: Shape });
 }
@@ -48,6 +50,5 @@ export interface ShapeFactory {
 
 
 export interface ShapeManagerEventBased {
-    // apply(e: ShapeEvent): this
     apply(e: ShapeEvent);
 }

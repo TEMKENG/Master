@@ -15,12 +15,14 @@ class AddShapeEvent {
     }
 }
 class RemoveShapeWithIdEvent {
-    constructor(shapeId, redraw) {
+    constructor(shapeId, redraw, fromButton) {
         this.type = "removeShapeWithId";
         this.data = {};
-        this.data["shapeId"] = shapeId;
         this.data["redraw"] = redraw;
+        this.data["shapeId"] = shapeId;
+        this.data["fromButton"] = fromButton;
     }
+
     info() {
         let infos = {};
         infos["event"] = this.type;
@@ -28,16 +30,28 @@ class RemoveShapeWithIdEvent {
         return infos;
     }
 }
+
+class ChangeColor {
+    constructor() {
+        this.type = "ChangeColor";
+        this.data = {};
+    }
+
+    info() {
+        return {};
+    }
+}
+
 class ChooseShapeAtEvent {
-    constructor(x, y, selected = false, toSelect, clientId) {
+    constructor(x, y, selected = false, toSelect) {
         this.type = "chooseShape";
         this.data = {};
         this.data["x"] = x;
         this.data["y"] = y;
-        this.data["clientId"] = clientId;
-        this.data["selected"] = selected;
         this.data["toSelect"] = toSelect;
+        this.data["selected"] = selected;
     }
+
     info() {
         let infos = {};
         infos["event"] = this.type;

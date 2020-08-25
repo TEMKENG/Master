@@ -1,3 +1,4 @@
+console.log("Shapes Class");
 import {Shape, ShapeFactory, ShapeManager} from "./types.js";
 
 class Point2D {
@@ -16,13 +17,9 @@ class Point2D {
 class AbstractShape {
     private static counter: number = 0;
     readonly id: number;
-    // static bdColor: string;
-    // static bgColor: string;
 
-    constructor() {
-        this.id = AbstractShape.counter++;
-        // AbstractShape.bgColor = undefined;
-        // AbstractShape.bdColor = undefined;
+    constructor(id?: number) {
+        this.id = id != undefined ? id : AbstractShape.counter++;
     }
 }
 
@@ -70,18 +67,19 @@ abstract class AbstractFactory<T extends Shape> {
 
 }
 
-export class Line extends AbstractShape implements Shape {
+class Line extends AbstractShape implements Shape {
+    label = "Line";
     zOrder: number;
     bdColor: string;
     bgColor: string;
+    clientId: number;
     selected: boolean;
 
-    constructor(readonly from: Point2D, readonly to: Point2D) {
-        super();
-        this.zOrder = undefined;
-        this.bdColor = undefined;
-        this.bgColor = undefined;
+    constructor(readonly from: Point2D, readonly to: Point2D, id?: number, clientId?: number) {
+        super(id);
         this.selected = false;
+        this.clientId = clientId;
+
     }
 
 
@@ -173,15 +171,14 @@ class Circle extends AbstractShape implements Shape {
     zOrder: number;
     bdColor: string;
     bgColor: string;
+    label = "Circle";
+    clientId: number;
     selected: boolean;
 
-    constructor(readonly center: Point2D, readonly radius: number) {
-        super();
-        this.zOrder = undefined;
-        this.bdColor = undefined;
-        this.bgColor = undefined;
+    constructor(readonly center: Point2D, readonly radius: number, id?: number, clientId?: number) {
+        super(id);
         this.selected = false;
-
+        this.clientId = clientId;
     }
 
     object() {
@@ -271,13 +268,14 @@ class Rectangle extends AbstractShape implements Shape {
     bdColor: string;
     bgColor: string;
     selected: boolean;
+    label = "Rectangle";
+    clientId: number;
 
-    constructor(readonly from: Point2D, readonly to: Point2D) {
-        super();
-        this.zOrder = undefined;
-        this.bdColor = undefined;
-        this.bgColor = undefined;
+    constructor(readonly from: Point2D, readonly to: Point2D, id?: number, clientId?: number) {
+        super(id);
         this.selected = false;
+        this.clientId = clientId;
+
     }
 
     object() {
@@ -368,14 +366,14 @@ class Triangle extends AbstractShape implements Shape {
     zOrder: number;
     bdColor: string;
     bgColor: string;
+    clientId: number;
     selected: boolean;
+    label = "Triangle";
 
-    constructor(readonly p1: Point2D, readonly p2: Point2D, readonly p3: Point2D) {
-        super();
-        this.zOrder = undefined;
-        this.bdColor = undefined;
-        this.bgColor = undefined;
+    constructor(readonly p1: Point2D, readonly p2: Point2D, readonly p3: Point2D, id?: number, clientId?: number) {
+        super(id);
         this.selected = false;
+        this.clientId = clientId;
     }
 
     object() {
@@ -551,16 +549,14 @@ export class ChooseShape implements ShapeFactory {
         this.from = new Point2D(x, y);
         this.movableShape = this.shapeManager.chooseShapeAt(x, y, true);
         this.move = Object.keys(this.movableShape).length > 0;
-        console.log("Result of down: ", this.movableShape);
-        // this.movableShape = {};
+        // console.log("Result of down: ", this.movableShape);
     }
 
     handleMouseUp(x: number, y: number) {
         this.movableShape = this.shapeManager.chooseShapeAt(x, y);
-        // console.log("handleMouseUp", );
         this.move = undefined;
         this.from = undefined;
-        console.log("Resultof up: ", this.movableShape);
+        // console.log("Resultof up: ", this.movableShape);
     }
 
     handleMouseMove(x: number, y: number) {
@@ -570,7 +566,7 @@ export class ChooseShape implements ShapeFactory {
             for (let id of Object.keys(this.movableShape)) {
                 let shape = this.createShape(diff.dx, diff.dy, this.movableShape[id]);
                 this.tmpMovableShape[shape.id] = shape;
-                this.shapeManager.removeShapeWithId(+id, false);
+                this.shapeManager.removeShapeWithId(+id, false, true);
                 this.shapeManager.addShape(shape, false, true);
             }
             this.shapeManager.chooseShapeAt(x, y, true, this.tmpMovableShape);
@@ -583,25 +579,25 @@ export class ChooseShape implements ShapeFactory {
         this.from = this.tmpTo;
     }
 
-    createShape(dx: number, dy: number, oldShape: Shape): Shape {
+    createShape(dx: number, dy: number, oldShape: Shape, ID?: number): Shape {
         let object = oldShape.object();
         let data = object.data;
-        let shape: Shape = undefined;
+        let shape: Shape;
         if (object.type === "Triangle") {
             let p1 = this.pointUpdate(data.p1, dx, dy);
             let p2 = this.pointUpdate(data.p2, dx, dy);
             let p3 = this.pointUpdate(data.p3, dx, dy);
-            shape = new Triangle(p1, p2, p3);
+            shape = new Triangle(p1, p2, p3, ID);
         } else if (object.type === "Circle") {
             let center = this.pointUpdate(data.center, dx, dy);
-            shape = new Circle(center, data.radius);
+            shape = new Circle(center, data.radius, ID);
         } else {
             let to = this.pointUpdate(data.to, dx, dy);
             let from = this.pointUpdate(data.from, dx, dy);
             if (object.type === "Line") {
-                shape = new Line(from, to);
+                shape = new Line(from, to, ID);
             } else if (object.type === "Rectangle") {
-                shape = new Rectangle(from, to);
+                shape = new Rectangle(from, to, ID);
             }
         }
         this.shapeUpdate(data, shape);
@@ -638,3 +634,6 @@ function selected_draw(ctx: CanvasRenderingContext2D, points: Point2D[], color: 
     ctx.strokeStyle = oldStroke;
 
 }
+
+
+export {Point2D, Line, Triangle, Circle, Rectangle}

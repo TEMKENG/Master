@@ -31,9 +31,10 @@ class RemoveShapeWithIdEvent implements ShapeEvent {
     type: string = "removeShapeWithId";
     data: { [p: string]: any } = {};
 
-    constructor(shapeId: number, redraw?: boolean) {
-        this.data["shapeId"] = shapeId;
+    constructor(shapeId: number, redraw?: boolean, fromButton?: boolean) {
         this.data["redraw"] = redraw;
+        this.data["shapeId"] = shapeId;
+        this.data["fromButton"] = fromButton;
     }
 
     info(): { [p: string]: any } {
@@ -44,16 +45,29 @@ class RemoveShapeWithIdEvent implements ShapeEvent {
     }
 }
 
+class ChangeColor implements ShapeEvent {
+    type: string = "ChangeColor";
+    data: { [p: string]: any } = {};
+
+    constructor() {
+    }
+
+    info(): { [p: string]: any } {
+        return {};
+    }
+
+}
+
 class ChooseShapeAtEvent implements ShapeEvent {
     type: string = "chooseShape";
     data: { [p: string]: any } = {};
 
-    constructor(x: number, y: number, selected: boolean = false, toSelect?: { [p: number]: Shape }, clientId?: number) {
+    constructor(x: number, y: number, selected: boolean = false, toSelect?: { [p: number]: Shape }) {
         this.data["x"] = x;
         this.data["y"] = y;
-        this.data["clientId"] = clientId;
-        this.data["selected"] = selected;
         this.data["toSelect"] = toSelect;
+
+        this.data["selected"] = selected;
     }
 
     info(): { [p: string]: any } {
@@ -70,7 +84,7 @@ class UnselectShapeEvent implements ShapeEvent {
     data: { [p: string]: any } = {};
 
 
-    constructor(e:Shape) {
+    constructor(e: Shape) {
         this.data["shape"] = e;
 
     }
@@ -89,7 +103,7 @@ class SelectShapeEvent implements ShapeEvent {
     data: { [p: string]: any } = {};
 
 
-    constructor(e:Shape) {
+    constructor(e: Shape) {
         this.data["shape"] = e;
 
     }

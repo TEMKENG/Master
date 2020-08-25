@@ -141,25 +141,25 @@ export class menuApi {
         return new MenuEntry('hr', '', handler);
     }
     createRadioOption(type, colors, color) {
-        console.log('type: ', type);
-        console.log('colors: ', colors);
-        console.log('color: ', color);
+        // console.log('type: ', type);
+        // console.log('colors: ', colors);
+        // console.log('color: ', color);
         // let entries = this.createMenu(type);
         let entries = [];
         entries.push(this.createItem(type, null, null));
         for (let colorsKey in colors) {
             // console.log('color i: ', colorsKey, typeof colorsKey);
-            let test = null;
+            let item = null;
             // console.log('color checked 1: ', color, colorsKey, colors[colorsKey]);
             if (colorsKey === color) {
                 // console.log('color checked: ', color);
-                test = this.createItem(type + " " + colors[colorsKey], 'input', null, true);
+                item = this.createItem(type + " " + colors[colorsKey], 'input', null, true);
             }
             else {
-                test = this.createItem(type + " " + colors[colorsKey], 'input', null);
+                item = this.createItem(type + " " + colors[colorsKey], 'input', null);
             }
             // entries.addItems(test);
-            entries.push(test);
+            entries.push(item);
         }
         // console.log('Entries: ', entries);
         return entries;
@@ -167,7 +167,6 @@ export class menuApi {
 }
 export class setupContextMenu {
     constructor(factory, main_menu_name) {
-        console.log("qubjkjfs");
         // Menu instansieren
         let menu = factory.createMenu(main_menu_name);
         // Menueinträge hinzufügen

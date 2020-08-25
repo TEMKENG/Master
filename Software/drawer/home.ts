@@ -1,0 +1,1 @@
+console.log("La vie est belle jusqu a");
