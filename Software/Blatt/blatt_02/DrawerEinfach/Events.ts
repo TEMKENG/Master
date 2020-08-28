@@ -1,7 +1,5 @@
 import {Shape} from "./types.js";
 
-export {ShapeEvent, AddShapeEvent, RemoveShapeWithIdEvent, SelectShapeEvent, UnselectShapeEvent, ChooseShapeAtEvent}
-
 interface ShapeEvent {
     type: string;
     data: { [p: string]: any };
@@ -43,19 +41,6 @@ class RemoveShapeWithIdEvent implements ShapeEvent {
         infos["shapeId"] = this.data.shapeId;
         return infos;
     }
-}
-
-class ChangeColor implements ShapeEvent {
-    type: string = "ChangeColor";
-    data: { [p: string]: any } = {};
-
-    constructor() {
-    }
-
-    info(): { [p: string]: any } {
-        return {};
-    }
-
 }
 
 class ChooseShapeAtEvent implements ShapeEvent {
@@ -117,3 +102,72 @@ class SelectShapeEvent implements ShapeEvent {
 
 }
 
+class ChangeColorEvent implements ShapeEvent {
+    type: string = "changeColor";
+    data: { [p: string]: any } = {};
+
+    constructor(selectedShapes: number[], color: string, background: boolean = false) {
+        this.data["color"] = color;
+        this.data["background"] = background;
+        this.data["selectedShapes"] = selectedShapes;
+    }
+
+    info(): { [p: string]: any } {
+        let infos: { [p: string]: any } = {};
+        infos["event"] = this.type;
+        infos["data"] = this.data;
+        return infos;
+    }
+
+}
+
+class ChangeShapeStatusEvent implements ShapeEvent {
+    type: string = "changeShapeStatus";
+    data: { [p: string]: any } = {};
+
+    constructor(shapes: number[], x: number, y: number, select: boolean) {
+        this.data["x"] = x;
+        this.data["y"] = y;
+        this.data["select"] = select;
+        this.data["shapes"] = shapes;
+    }
+
+    info(): { [p: string]: any } {
+        let infos: { [p: string]: any } = {};
+        infos["event"] = this.type;
+        infos["data"] = this.data;
+        return infos;
+    }
+
+}
+
+class ZOderEvent implements ShapeEvent {
+    type: string = "zOder";
+    data: { [p: string]: any } = {};
+
+    constructor(shapes: number[], plus: boolean) {
+        this.data["plus"] = plus;
+        this.data["shapes"] = shapes;
+    }
+
+    info(): { [p: string]: any } {
+        let infos: { [p: string]: any } = {};
+        infos["event"] = this.type;
+        infos["data"] = this.data;
+        return infos;
+    }
+
+}
+
+
+export {
+    ShapeEvent,
+    ZOderEvent,
+    AddShapeEvent,
+    SelectShapeEvent,
+    ChangeColorEvent,
+    UnselectShapeEvent,
+    ChooseShapeAtEvent,
+    RemoveShapeWithIdEvent,
+    ChangeShapeStatusEvent
+}

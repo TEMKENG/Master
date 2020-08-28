@@ -104,10 +104,7 @@ export class MenuEntry {
             this.entry.setAttribute('type', 'radio');
             this.entry.setAttribute('id', color);
             this.entry.setAttribute('name', name);
-            if (color.toLocaleLowerCase() === 'transparent')
-                this.entry.setAttribute('value', undefined);
-            else
-                this.entry.setAttribute('value', color.toLocaleLowerCase());
+            this.entry.setAttribute('value', color.toLocaleLowerCase());
             if (this.select) {
                 // console.log("checked: ", this.entry);
                 this.entry.setAttribute("checked", "true");
@@ -173,19 +170,14 @@ export class menuApi {
         let entries: MenuEntry[] = [];
         entries.push(this.createItem(type, null, null));
         for (let colorsKey in colors) {
-            // console.log('color i: ', colorsKey, typeof colorsKey);
             let item = null;
-            // console.log('color checked 1: ', color, colorsKey, colors[colorsKey]);
             if (colorsKey === color) {
-                // console.log('color checked: ', color);
                 item = this.createItem(type + " " + colors[colorsKey], 'input', null, true);
             } else {
                 item = this.createItem(type + " " + colors[colorsKey], 'input', null,);
             }
-            // entries.addItems(test);
             entries.push(item);
         }
-        // console.log('Entries: ', entries);
         return entries;
 
     }

@@ -1,6 +1,5 @@
 console.log("HOME");
-import {getCookie, setCookie, wGetContent, wGetRun, wSend} from './Utils.js';
-
+import { getCookie, setCookie, wGetContent, wGetRun, wSend } from './Utils.js';
 let ws = new WebSocket('ws://localhost:8888');
 // event emmited when connected
 ws.onopen = () => {
@@ -9,7 +8,7 @@ ws.onopen = () => {
     // sending a send event to websocket server
     setInterval(() => {
         wSend(ws, 'getCanvasList');
-    }, 10000);
+    }, 1500);
     newClient();
     document.getElementById("hello").innerHTML = "Herzliches Willkommen in Draw-APP <br>" + "Client:  " + getCookie();
 };
@@ -22,8 +21,8 @@ ws.onmessage = (ev) => {
             // htmlContent += "<li><a title='Create By " + canvas["createBy"]
             //     + "' href='/canvas/" + canvas["canvasId"] + "'  onclick='registerForCanvas()'>Canvas-"
             //     + canvas["canvasId"] + "</a></li>"
-            htmlContent += "<li ><a title='Create By " + canvas["createBy"]
-                + "' href='/canvas/" + canvas["canvasId"] + "'   >Canvas-"
+            htmlContent += htmlContent += "<li><a class='link' title='Create By " + canvas["clientId"]
+                + "' href='javascript:;' onclick='launch(\"/canvas/" + canvas["canvasId"] + "\")'>Canvas-"
                 + canvas["canvasId"] + "</a></li>";
         }
         htmlContent += "</ul>";
@@ -32,7 +31,7 @@ ws.onmessage = (ev) => {
     wGetRun("savedClient", ev.data, () => {
         let clientId = wGetContent(ev.data)["clientId"];
         console.log("Save client: ", clientId);
-        setCookie(clientId, 60);
+        setCookie(clientId, 360);
         document.getElementById("hello").innerHTML = "Herzliches Willkommen in Draw-APP <br>" + "Client:  " + getCookie();
     });
 };
@@ -44,6 +43,9 @@ document.getElementById("new_canvas").onclick = () => {
         "connected_clients": []
     };
     wSend(ws, "newCanvas", JSON.stringify(canvasObject));
+};
+window.onunload = function () {
+    wSend(ws, "unregisterForCanvas", JSON.stringify({ "sms": "L argent c est bien mais les femmes c est mieux!!!" }));
 };
 const newClient = () => {
     wSend(ws, "newClient", JSON.stringify({

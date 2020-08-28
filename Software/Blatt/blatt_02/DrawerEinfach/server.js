@@ -4,7 +4,7 @@ import WebSocket from 'ws';
 import * as http from "http";
 import express from 'express';
 import { createShape, wGetContent, wGetRun, wSend } from "./Utils.js";
-import { AddShapeEvent, ChooseShapeAtEvent, RemoveShapeWithIdEvent } from "./Events.js";
+import { AddShapeEvent, ChangeColorEvent, ChangeShapeStatusEvent, ChooseShapeAtEvent, RemoveShapeWithIdEvent, ZOderEvent } from "./Events.js";
 const app = express();
 //initialize a simple http server
 const PORT = process.env.PORT || 8888;
@@ -13,11 +13,9 @@ let __dirname = path.resolve(path.dirname(''));
 const server = http.createServer(app);
 // const wss = new WebSocket.Server({port: 8080});
 const wss = new WebSocket.Server({ server: server });
-let allCanvas = []; // contains a structure with the Canvas Id and a list of Event
 let canvasList = [];
 let clientIds = [];
 let clientId = "";
-let clients = [];
 app.use(express.json());
 app.use('/', express.static(__dirname));
 app.use('/canvas/:id', express.static(__dirname));
@@ -39,9 +37,9 @@ app.get('/canvas/:id', function (req, res) {
         }
         return elt;
     });
-    console.log("la liste: ", canvasList);
     // res.render('index_index.html'); // need ejs, swig jade, etc
-    res.sendFile(path.join(__dirname + '/index_index.html'));
+    // res.sendFile(path.join(__dirname + '/index_index.html'));
+    res.sendFile(path.join(__dirname + '/home.html'));
 });
 const newClientId = () => {
     console.log("new client: ", clientIds);
@@ -52,6 +50,41 @@ const newClientId = () => {
 };
 wss.on('connection', function (ws) {
     ws.on('message', function (message) {
+        wGetRun("unregisterForCanvas", message, function () {
+            console.log("unregisterForCanvas");
+            const canvasId = wGetContent(message)["canvasId"];
+            const clientId = wGetContent(message)["clientId"];
+            canvasList = canvasList.map(canvas => {
+                if (canvas.canvasId === canvasId) {
+                    let connected_clients = canvas["connected_clients"];
+                    canvas["connected_clients"] = canvas["connected_clients"].filter(client => client !== clientId);
+                    console.log("Die verbundenen Kunden!!!");
+                    console.log(connected_clients);
+                    console.log(canvas["connected_clients"]);
+                    console.log(wGetContent(message));
+                }
+                return canvas;
+            });
+            console.log("unregisterForCanvas");
+            // console.log(canvasList);
+        });
+        wGetRun("registerForCanvas", message, function () {
+            console.log("registerForCanvas");
+            const canvasId = wGetContent(message)["canvasId"];
+            const clientId = wGetContent(message)["clientId"];
+            canvasList = canvasList.map(canvas => {
+                if (canvas["canvasId"] == canvasId) {
+                    let connected_clients = canvas["connected_clients"];
+                    if (connected_clients.indexOf(clientId) < 0) {
+                        canvas["connected_clients"].push(clientId);
+                    }
+                }
+                return canvas;
+            });
+            console.log(canvasList);
+            console.log(wGetContent(message));
+            console.log("registerForCanvas");
+        });
         wGetRun("newClient", message, () => {
             const clientIdGet = wGetContent(message)["clientId"];
             if (!!clientIdGet === false || clientIdGet === "") {
@@ -78,13 +111,12 @@ wss.on('connection', function (ws) {
                 });
             }
             console.log("[+] Clients: ", clientIds);
-            console.log("la liste: 3", canvasList);
         });
         wGetRun("newCanvas", message, () => {
             canvasList.push({
                 "canvasId": wGetContent(message)["canvasId"],
                 "createBy": wGetContent(message)["createBy"],
-                "connected_clients": wGetContent(message)["connected_clients"],
+                "connected_clients": [],
                 "shape_events": []
             });
             console.log("[+] canvasList: ", canvasList);
@@ -98,7 +130,8 @@ wss.on('connection', function (ws) {
                 if (canvas["canvasId"] == canvasId) {
                     let eventList = canvas["shape_events"];
                     let event = wGetContent(message);
-                    canvas["shape_events"] = reduceEventList(event, eventList);
+                    canvas["shape_events"] = reduceEventListSize(event, eventList);
+                    // canvas["shape_events"] = [wGetContent(message)]
                 }
                 return canvas;
             });
@@ -111,7 +144,9 @@ wss.on('connection', function (ws) {
                     canvasEvents = canvas["shape_events"];
                 }
             }
-            wSend(ws, 'drawShape', JSON.stringify(canvasEvents));
+            if (!!canvasEvents) {
+                wSend(ws, 'drawShape', JSON.stringify(canvasEvents));
+            }
         });
     });
 });
@@ -127,6 +162,15 @@ function createEvent(e) {
         case "chooseShape":
             event = new ChooseShapeAtEvent(e.data.x, e.data.y, e.data.selected, e.data.toSelect);
             break;
+        case "changeColor":
+            event = new ChangeColorEvent(e.data.selectedShapes, e.data.color, e.data.background);
+            break;
+        case "changeShapeStatus":
+            event = new ChangeShapeStatusEvent(e.data.shapes, e.data.x, e.data.y, e.data.select);
+            break;
+        case "zOder":
+            event = new ZOderEvent(e.data.shapes, e.data.plus);
+            break;
         default:
             console.log("This event is not yet handled");
     }
@@ -134,12 +178,19 @@ function createEvent(e) {
     event["canvasId"] = e.canvasId;
     return event;
 }
-function reduceEventList(eventE, events) {
+function reduceEventListSize(eventE, events) {
     let len = events.length;
+    let lastEvent;
     let event = createEvent(eventE);
     let shapeEvents = [];
-    for (let event of events) {
-        shapeEvents.push(createEvent(event));
+    for (let ev of events) {
+        if (ev.type === eventE.type && ev.type === "changeShapeStatus") {
+            // console.log(JSON.stringify(event), "okay");
+        }
+        else {
+            shapeEvents.push(createEvent(ev));
+        }
+        // shapeEvents.push(createEvent(ev));
     }
     let object;
     if (event.type === "removeShapeWithId") {
@@ -152,12 +203,15 @@ function reduceEventList(eventE, events) {
             shapeEvents.push(event);
         }
     }
+    else if (event.type === "changeColor" || event.type === "changeShapeStatus" || event.type === "zOder") {
+        shapeEvents.push(event);
+    }
     else if (len > 0) {
         object = event.data.shape.object();
         let lastEvent = shapeEvents[len - 1];
         let lastObjectData = undefined;
-        if (event.type !== lastEvent.type || lastEvent.data.shape.object().type !== object.type || lastEvent.type === "removeShapeWithId") {
-            // console.log("Les problem\n", lastEvent, event);
+        const checker = event.type !== lastEvent.type || lastEvent.data.shape.object().type !== object.type || lastEvent.type === "removeShapeWithId" || lastEvent.type === "zOder";
+        if (checker) {
             shapeEvents.push(event);
         }
         else {
@@ -193,23 +247,6 @@ function reduceEventList(eventE, events) {
     }
     return JSON.parse(JSON.stringify(shapeEvents));
 }
-class CanvasObject {
-    constructor(canvasID, clientList = []) {
-        this.canvasID = canvasID;
-        this.clientList = clientList;
-    }
-    addClient(borderColor) {
-    }
-    containt() {
-        var equals = false;
-        allCanvas.forEach(canvas => {
-            if (this.canvasID == canvas.canvasID) {
-                equals = true;
-            }
-        });
-        return equals;
-    }
-}
 //start the Express server
 server.listen(PORT, () => {
     // console.log("okay ", wss);
@@ -217,5 +254,4 @@ server.listen(PORT, () => {
     console.log(`Server started on port http://localhost:${PORT}/home.html `);
     console.log(`Server started on port http://localhost:${PORT}`);
 });
-export { clientIds };
 //# sourceMappingURL=server.js.map

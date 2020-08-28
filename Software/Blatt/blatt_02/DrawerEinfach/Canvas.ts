@@ -1,19 +1,24 @@
 console.log("CANVAS Class")
+import {ws} from "./init.js";
 import {setup} from "./script.js";
 import {ToolArea} from "./ToolArea.js";
-import {createShape, getCookie} from "./Utils.js";
+import {createShape, getCookie, wSend} from "./Utils.js";
 import {Shape, ShapeManagerEventBased} from "./types.js";
 import {Circle, Line, Rectangle, Triangle} from "./Shapes.js";
-import {AddShapeEvent, ChooseShapeAtEvent, RemoveShapeWithIdEvent, ShapeEvent} from "./Events.js";
-
-// let ws = new WebSocket('ws://localhost:8080');
-let ws = new WebSocket('ws://localhost:8888');
-
+import {
+    AddShapeEvent,
+    ChooseShapeAtEvent,
+    RemoveShapeWithIdEvent,
+    ShapeEvent,
+    ChangeColorEvent,
+    ChangeShapeStatusEvent, ZOderEvent
+} from "./Events.js";
 
 export class Canvas implements ShapeManagerEventBased {
-    public readonly ctx: CanvasRenderingContext2D;
+    private canvasId: string;
+    private readonly ctx: CanvasRenderingContext2D;
     private events = [];
-    public width: number;
+    private width: number;
     private height: number;
     private selectShapes: number[] = [];
     private altIsPressed: boolean = false;
@@ -40,12 +45,11 @@ export class Canvas implements ShapeManagerEventBased {
         this.width = width;
         this.height = height;
         this.eventTextField = document.getElementById("event") as HTMLInputElement;
-        // console.log("Textfield: ", this.eventTextField, typeof this.eventTextField);
         let self = this;
         let event = {};
         event["clientId"] = getCookie();
-        const canvasId = window.location.pathname.replace("/canvas/", "").replace("/", "");
-        event["canvasId"] = canvasId;
+        this.canvasId = window.location.pathname.split("/")[2];
+        event["canvasId"] = this.canvasId;
         console.log(event)
 
         this.ctx = canvasDomElement.getContext("2d");
@@ -55,7 +59,7 @@ export class Canvas implements ShapeManagerEventBased {
 
         let clearBtn = document.getElementById("clearButton") as HTMLButtonElement;
         let loadButton = document.getElementById("loadButton") as HTMLButtonElement;
-        document.getElementById("helloI").innerHTML = "Client:  " + getCookie() + " <br>  Canvas: " + canvasId;
+        document.getElementById("helloI").innerHTML = "Client:  " + getCookie() + " <br>  Canvas: " + this.canvasId;
 
         this.textAreaEvent = document.getElementById("events") as HTMLTextAreaElement;
         loadButton.addEventListener("click", () => {
@@ -84,14 +88,21 @@ export class Canvas implements ShapeManagerEventBased {
         }, false);
         setup.menuEntries['Hintergrund'].forEach(entry => {
             entry.function = function () {
-                self.bgColor(entry.entry.value);
+                // self.color(self.selectShapes, entry.entry.value, true);
+                let event = new ChangeColorEvent(self.selectShapes, entry.entry.value, true);
+                event["clientId"] = getCookie();
+                event["canvasId"] = self.canvasId;
+                wSend(ws, "saveEvent", JSON.stringify(event));
             };
             entry.listener();
         });
 
         setup.menuEntries['Randfarbe'].forEach(entry => {
             entry.function = function () {
-                self.bdColor(entry.entry.value);
+                let event = new ChangeColorEvent(self.selectShapes, entry.entry.value, false);
+                event["clientId"] = getCookie();
+                event["canvasId"] = self.canvasId;
+                wSend(ws, "saveEvent", JSON.stringify(event));
             };
             entry.listener();
         });
@@ -100,40 +111,18 @@ export class Canvas implements ShapeManagerEventBased {
         let deleteEntry = setup.menuEntries['Delete'];
 
         z_plus.function = function () {
-            let len = self.selectShapes.length;
-            for (let i = 0; i < self.selectShapes.length; i++) {
-                let id = self.selectShapes[i];
-                let index = self.state.indexOf(id);
-                if (index !== self.state.length - 1) {
-                    let next = self.state[index];
-                    self.state[index] = self.state[index + 1];
-                    self.state[index + 1] = next;
-                }
-            }
-            let copy = self.deepCopy(self.shapes);
-            self.shapes = {};
-            for (let id of self.state) {
-                self.shapes[id] = copy[id];
-            }
-            console.log('Z_PlUS: ', self.state, self.shapes, copy);
+            let zOderEvent = new ZOderEvent(self.selectShapes, true);
+            zOderEvent["clientId"] = getCookie();
+            zOderEvent["canvasId"] = self.canvasId;
+            wSend(ws, "saveEvent", JSON.stringify(zOderEvent));
+            // console.log('Z_ORDER_PLUS');
         };
         z_minus.function = function () {
-            for (let i = 0; i < self.selectShapes.length; i++) {
-                let id = self.selectShapes[i];
-                let index = self.state.indexOf(id);
-                if (index !== 0) {
-                    let next = self.state[index];
-                    self.state[index] = self.state[index - 1];
-                    self.state[index - 1] = next;
-                }
-            }
-
-            let copy = self.deepCopy(self.shapes);
-            self.shapes = {};
-            for (let id of self.state) {
-                self.shapes[id] = copy[id];
-            }
-            console.log('Z_Minus: ', self.state, self.shapes, copy);
+            let zOderEvent = new ZOderEvent(self.selectShapes, false);
+            zOderEvent["clientId"] = getCookie();
+            zOderEvent["canvasId"] = self.canvasId;
+            wSend(ws, "saveEvent", JSON.stringify(zOderEvent));
+            // console.log('Z_ORDER_MINUS: ');
         };
         deleteEntry.function = function () {
             self.delectClicked = true;
@@ -174,28 +163,76 @@ export class Canvas implements ShapeManagerEventBased {
         }
     }
 
-    deepCopy(shapes: { [p: number]: Shape }): { [p: number]: Shape } {
-        let copy: { [p: number]: Shape } = {};
-        for (let id of Object.keys(shapes)) {
-            copy[id] = shapes[id];
-        }
-        return copy;
-    }
-
-    bgColor(color?: string) {
-        for (let i = 0; i < this.selectShapes.length; i++) {
-            let id = this.selectShapes[i];
-            this.shapes[id].bgColor = color;
-            this.shapes[id].draw(this.ctx, true);
+    color(selectedShapes: number[], color: string, background: boolean) {
+        for (let i = 0; i < selectedShapes.length; i++) {
+            let id = selectedShapes [i];
+            if (background) {
+                this.shapes[id].bgColor = color;
+            } else {
+                this.shapes[id].bdColor = color;
+            }
+            this.shapes[id].draw(this.ctx);
         }
     }
 
-    bdColor(color?: string) {
-        for (let i = 0; i < this.selectShapes.length; i++) {
-            let id = this.selectShapes[i];
-            this.shapes[id].bdColor = color;
-            this.shapes[id].draw(this.ctx, true);
+    changeShapeStatus(shapes: number[], x: number, y: number, select: boolean) {
+        this.makeSelectableShape(x, y);
+        // console.log("Shapes debut: ", shapes, this.shapes);
+        for (let id of shapes) {
+            // if (this.shapes[id].selected === true) {
+            //     // if (select !== true) {
+            //     this.shapes[id].selected = false;
+            //     // this.shapes[id].draw(this.ctx, true, this.selectColor);
+            //     this.shapes[id].draw(this.ctx);
+            //     this.selectShapes = this.selectShapes.filter(item => item != id);
+            //     this.eventTextField.value = "Deselect Shape with ID: " + id;
+            // } else {
+            //     this.shapes[id].selected = true;
+            //     if (this.selectShapes.indexOf(id) < 0) {
+            //         this.selectShapes.push(id);
+            //     }
+            //     this.shapes[id].draw(this.ctx, true, "red");
+            //     this.eventTextField.value = "Select Shape with ID: " + id;
+            // }
+
+            // console.log(shapes);
+            this.shapes[id].selected = true;
+            if (this.selectShapes.indexOf(id) < 0) {
+                this.selectShapes.push(id);
+            }
+            this.shapes[id].draw(this.ctx, true, "red");
+            this.eventTextField.value = "Select Shape with ID: " + id;
         }
+        // console.log("Shapes fin: ", shapes, this.shapes);
+
+    }
+
+    zOder(shapes: number[], plus: boolean) {
+        for (let i = 0; i < shapes.length; i++) {
+            let id = shapes[i];
+            let index = this.state.indexOf(id);
+            if (plus === true) {
+                if (index !== this.state.length - 1) {
+                    let next = this.state[index];
+                    this.state[index] = this.state[index + 1];
+                    this.state[index + 1] = next;
+                }
+            } else {
+                if (index !== 0) {
+                    let next = this.state[index];
+                    this.state[index] = this.state[index - 1];
+                    this.state[index - 1] = next;
+                }
+            }
+        }
+
+        // let copy = this.deepCopy(this.shapes);
+        let copy = this.shapes;
+        this.shapes = {};
+        for (let id of this.state) {
+            this.shapes[id] = copy[id];
+        }
+        // console.log('Z_Minus: ', this.state, this.shapes, copy);
     }
 
     draw(): this {
@@ -242,6 +279,8 @@ export class Canvas implements ShapeManagerEventBased {
         delete this.shapes[id];
 
         this.state = this.state.filter(item => item != id);
+        this.selectShapes = this.selectShapes.filter(item => item != id);
+
         if (this.auswahl && this.delectClicked) {
             this.delectClicked = false;
         }
@@ -253,110 +292,20 @@ export class Canvas implements ShapeManagerEventBased {
         let tmpBool = this.delectClicked;
         let shapeLength = this.selectShapes.length - 1;
         for (let index = 0; index <= shapeLength; index++) {
+            let id: number = this.selectShapes[index];
             this.delectClicked = tmpBool;
-            let removeEvent = new RemoveShapeWithIdEvent(this.selectShapes[index], index === shapeLength, fromButton);
-            this.apply(removeEvent);
+            let removeEvent = new RemoveShapeWithIdEvent(id, index === shapeLength, fromButton);
+            removeEvent["clientId"] = getCookie();
+            removeEvent["canvasId"] = this.canvasId;
+            wSend(ws, "saveEvent", JSON.stringify(removeEvent));
+            delete this.shapes[id];
+            this.state = this.state.filter(item => item != id);
+            this.selectShapes = this.selectShapes.filter(item => item != id);
+
+            // this.apply(removeEvent);
             // this.removeShapeWithId(this.selectShapes[index]);
         }
         this.selectShapes = [];
-    }
-
-    // chooseShapeAt(x: number, y: number, selected: boolean = false, mode?:string): this {
-    private chooseShapeAt(x: number, y: number, selected: boolean = false, toSelect?: { [p: number]: Shape }) {
-
-        let shapeUnderMouse: number[] = [];
-        let oldMover: boolean = this.moveChecker;
-        let dragShape: { [p: number]: Shape } = {};
-
-        this.ctx.clearRect(0, 0, this.width, this.height);
-        this.moveChecker = !!toSelect;
-
-        for (let id of this.state) {
-            this.shapes[id].selected = false;
-            if (this.shapes[id].isInside(x, y)) {
-                shapeUnderMouse.push(id);
-                this.shapes[id].draw(this.ctx, true, this.selectColor);
-            } else {
-                this.shapes[id].draw(this.ctx);
-            }
-        }
-        if (toSelect) {
-            this.lastShapes = toSelect;
-            dragShape = this.selectShape(toSelect, x, y);
-        } else {
-
-            if (selected && shapeUnderMouse.length > 0) {
-                let oldSelectShape: number[] = this.selectShapes;
-                if (this.strgIsPressed) {
-                    let tmpLength = this.selectShapes.length;
-                    for (let i = shapeUnderMouse.length; i > 0; i--) {
-                        let id = shapeUnderMouse[i - 1];
-                        if (this.selectShapes.indexOf(id) < 0) {
-                            this.selectShapes.push(id);
-                            dragShape[id] = this.shapes[id];
-                            this.eventTextField.value = "Select Shape with ID: " + id;
-                            break;
-                        }
-                    }
-                    if (this.selectShapes.length == tmpLength) {
-                        for (let i = shapeUnderMouse.length - 1; i > -1; i--) {
-                            let id = shapeUnderMouse[i];
-                            this.selectShapes = this.selectShapes.filter(item => item !== id);
-                            this.eventTextField.value = "Deselect Shape with ID: " + id;
-
-                        }
-                    }
-                } else {
-                    dragShape = {};
-                    this.selectShapes = [];
-                    if (this.altIsPressed) {
-                        console.log("altIsPressed");
-                        this.iterator = (this.iterator + 1) % (shapeUnderMouse.length + 1) === 0 ? 1 : (this.iterator + 1) % (shapeUnderMouse.length + 1);
-                    }
-                    let id = shapeUnderMouse[shapeUnderMouse.length - this.iterator];
-                    this.selectShapes.push(id);
-                    dragShape[id] = this.shapes[id];
-
-                }
-
-
-                if (!this.strgIsPressed && !this.altIsPressed) {
-                    let selectOrDeselect: string;
-                    if (oldSelectShape.toString() !== '' && oldSelectShape.toString() !== this.selectShapes.toString()) {
-                        this.deselect = true;
-                        selectOrDeselect = "SelectShape";
-                    } else {
-                        this.deselect = !this.deselect;
-                        selectOrDeselect = this.deselect === false ? 'UnselectShape' : 'SelectShape';
-                    }
-                    let tmpSelectShapes = this.selectShapes;
-                    if (selectOrDeselect === "UnselectShape") {
-                        this.selectShapes = [];
-                    }
-                    this.eventTextField.value = selectOrDeselect + "  id:" + tmpSelectShapes.toString();
-                }
-            }
-            for (let i = 0; i < this.selectShapes.length; i++) {
-                let id = this.selectShapes[i];
-                this.shapes[id].selected = true;
-                dragShape[id] = this.shapes[id];
-                this.shapes[id].draw(this.ctx, true, 'red');
-            }
-
-        }
-
-        if (this.moveChecker === false && oldMover) {
-            // this.addMoveEvent(this.oldSelected, this.lastShapes);
-            this.eventTextField.value = "Move finish";
-        } else if (this.moveChecker && oldMover === false) {
-            this.eventTextField.value = "Move begin";
-        } else if (this.moveChecker && oldMover) {
-            this.eventTextField.value = "Moving ID: " + Canvas.ids(this.oldSelected) + " to ID: " + Canvas.ids(this.lastShapes);
-        } else {
-            this.oldSelected = dragShape;
-
-        }
-        return dragShape;
     }
 
     private selectShape(toSelectShapes: { [p: number]: Shape }, x, y): { [p: number]: Shape } {
@@ -378,6 +327,135 @@ export class Canvas implements ShapeManagerEventBased {
         return dragShape;
     }
 
+    private makeSelectableShape(x: number, y: number): number[] {
+        let shapeUnderMouse: number[] = [];
+        for (let id of this.state) {
+            this.shapes[id].selected = false;
+            if (this.shapes[id].isInside(x, y)) {
+                shapeUnderMouse.push(id);
+                this.shapes[id].draw(this.ctx, true, this.selectColor);
+            } else {
+                this.shapes[id].draw(this.ctx);
+            }
+        }
+        return shapeUnderMouse;
+    }
+
+    // chooseShapeAt(x: number, y: number, selected: boolean = false, mode?:string): this {
+    private chooseShapeAt(x: number, y: number, selected: boolean = false, toSelect?: { [p: number]: Shape }) {
+
+        let shapeUnderMouse: number[];
+        let oldMover: boolean = this.moveChecker;
+        let dragShape: { [p: number]: Shape } = {};
+
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.moveChecker = !!toSelect;
+
+        // make shapes selectable
+        shapeUnderMouse = this.makeSelectableShape(x, y);
+        if (toSelect) {
+            this.lastShapes = toSelect;
+            dragShape = this.selectShape(toSelect, x, y);
+        } else {
+
+            if (selected && shapeUnderMouse.length > 0) {
+                let oldSelectShape: number[] = this.selectShapes;
+                if (this.strgIsPressed) {
+                    let tmpLength = this.selectShapes.length;
+                    for (let i = shapeUnderMouse.length; i > 0; i--) {
+                        let id = shapeUnderMouse[i - 1];
+                        if (this.selectShapes.indexOf(id) < 0) {
+                            this.selectShapes.push(id);
+                            dragShape[id] = this.shapes[id];
+                            this.eventTextField.value = "Select Shape with ID: " + id;
+                            // let changeStatusEvent = new ChangeShapeStatusEvent([id], x, y, true);
+                            // changeStatusEvent["clientId"] = getCookie();
+                            // changeStatusEvent["canvasId"] = this.canvasId;
+                            // wSend(ws, "saveEvent", JSON.stringify(changeStatusEvent));
+                            break;
+                        }
+                    }
+                    if (this.selectShapes.length == tmpLength) {
+                        for (let i = shapeUnderMouse.length - 1; i > -1; i--) {
+                            let id = shapeUnderMouse[i];
+                            this.selectShapes = this.selectShapes.filter(item => item !== id);
+                            this.eventTextField.value = "Deselect Shape with ID: " + id;
+
+                            // let changeStatusEvent = new ChangeShapeStatusEvent([id], x, y, false);
+                            // changeStatusEvent["clientId"] = getCookie();
+                            // changeStatusEvent["canvasId"] = this.canvasId;
+                            // wSend(ws, "saveEvent", JSON.stringify(changeStatusEvent));
+                        }
+                    }
+                } else {
+                    dragShape = {};
+                    this.selectShapes = [];
+                    if (this.altIsPressed) {
+                        console.log("altIsPressed");
+                        this.iterator = (this.iterator + 1) % (shapeUnderMouse.length + 1) === 0 ? 1 : (this.iterator + 1) % (shapeUnderMouse.length + 1);
+                    }
+                    let id = shapeUnderMouse[shapeUnderMouse.length - this.iterator];
+                    this.selectShapes.push(id);
+                    dragShape[id] = this.shapes[id];
+
+                }
+
+
+                if (!this.strgIsPressed && !this.altIsPressed) {
+
+
+                    let selectOrDeselect: string;
+                    if (oldSelectShape.toString() !== '' && oldSelectShape.toString() !== this.selectShapes.toString()) {
+                        this.deselect = true;
+                        selectOrDeselect = "SelectShape";
+                    } else {
+                        this.deselect = !this.deselect;
+                        selectOrDeselect = this.deselect === false ? 'UnselectShape' : 'SelectShape';
+                    }
+                    let tmpSelectShapes = this.selectShapes;
+                    if (selectOrDeselect === "UnselectShape") {
+                        this.selectShapes = [];
+                    }
+                    this.eventTextField.value = selectOrDeselect + "  id:" + tmpSelectShapes.toString();
+
+                    let changeStatusEvent = new ChangeShapeStatusEvent(this.selectShapes, x, y, selectOrDeselect === "SelectShape");
+                    changeStatusEvent["clientId"] = getCookie();
+                    changeStatusEvent["canvasId"] = this.canvasId;
+                    wSend(ws, "saveEvent", JSON.stringify(changeStatusEvent));
+                }
+            }
+            for (let i = 0; i < this.selectShapes.length; i++) {
+                let id = this.selectShapes[i];
+                this.shapes[id].selected = true;
+                dragShape[id] = this.shapes[id];
+                this.shapes[id].draw(this.ctx, true, 'red');
+            }
+            if (this.selectShapes.length > 0) {
+                let changeStatusEvent = new ChangeShapeStatusEvent(this.selectShapes, x, y, true);
+                changeStatusEvent["clientId"] = getCookie();
+                changeStatusEvent["canvasId"] = this.canvasId;
+                wSend(ws, "saveEvent", JSON.stringify(changeStatusEvent));
+            }
+        }
+
+        if (this.moveChecker === false && oldMover) {
+            this.eventTextField.value = "Move finish";
+            console.log("Move finish ");
+            console.log(this.oldSelected, this.lastShapes);
+            this.addMoveEvent(this.oldSelected, this.lastShapes);
+        } else if (this.moveChecker && oldMover === false) {
+            this.eventTextField.value = "Move begin";
+            console.log("Move Begin");
+        } else if (this.moveChecker && oldMover) {
+            this.eventTextField.value = "Moving ID: " + Canvas.ids(this.oldSelected) + " to ID: " + Canvas.ids(this.lastShapes);
+        } else {
+            this.oldSelected = dragShape;
+
+        }
+        return dragShape;
+    }
+
+
     apply(e: ShapeEvent) {
         this.addEvents(e);
         if (e.type == "addShape") {
@@ -390,6 +468,12 @@ export class Canvas implements ShapeManagerEventBased {
 
         } else if (e.type === "selectShape") {
 
+        } else if (e.type === "changeColor") {
+            return this.color(e.data.selectedShapes, e.data.color, e.data.background);
+        } else if (e.type === "changeShapeStatus") {
+            return this.changeShapeStatus(e.data.shapes, e.data.x, e.data.y, e.data.select);
+        } else if (e.type === "zOder") {
+            return this.zOder(e.data.shapes, e.data.plus);
         }
         return undefined;
     }
@@ -397,15 +481,24 @@ export class Canvas implements ShapeManagerEventBased {
     addEvents(event: ShapeEvent) {
         let len = this.events.length;
         let object;
-        // let event = {};
-        // event["type"] = event_.type;
-        // event["data"] = event_.data;
         if (event.type === "removeShapeWithId") {
-            // console.log("RSWID: ", event);
             if (this.auswahl && this.delectClicked) {
                 this.events.push(event);
             }
+        } else if (event.type === "changeColor" || event.type === "zOder") {
+            this.events.push(event);
+        } else if (event.type === "changeShapeStatus") {
+            const tmp = this.events;
+            this.events = [];
+            for (let ev of tmp) {
+                if (ev.type !== "changeShapeStatus") {
+                    this.events.push(ev);
+                }
+                // console.log("L a vie ");
+            }
+            this.events.push(event);
         } else if (event.type === "chooseShape") {
+
             if (event.data.selected === true) {
                 this.events.push(event);
             }
@@ -414,7 +507,7 @@ export class Canvas implements ShapeManagerEventBased {
             let lastEvent = this.events[len - 1];
             let lastObjectData = undefined;
 
-            if (event.type !== lastEvent.type || lastEvent.data.shape.object().type !== object.type || lastEvent.type === "removeShapeWithId") {
+            if (event.type !== lastEvent.type || lastEvent.data.shape.object().type !== object.type || lastEvent.type === "removeShapeWithId" || lastEvent.type === "zOder") {
                 this.events.push(event);
             } else {
                 lastObjectData = lastEvent.data.shape.object().data;
@@ -446,6 +539,8 @@ export class Canvas implements ShapeManagerEventBased {
             this.eventTextField.value = "Remove Shape with  ID:" + event.data.shapeId;
         } else if (event.type === "chooseShape") {
             // this.eventTextField.value = "Remove Shape with  ID:" + event.data.shapeId;
+        } else if (event.type === "changeColor" || event.type === "changeShapeStatus" || event.type === "zOder") {
+            this.eventTextField.value = event.type;
         } else {
             object = event.data.shape.object();
             this.eventTextField.value = event.type + "  " + object.type + "  with ID:" + object.id;
@@ -474,10 +569,15 @@ export class Canvas implements ShapeManagerEventBased {
         for (let i = 0; i <= length; i++) {
             let bShape = b[bKeys[i]];
             bShape.selected = true;
-            let removeEvent = new RemoveShapeWithIdEvent(+aKeys[i]);
+            let removeEvent = new RemoveShapeWithIdEvent(+aKeys[i], true, true);
             let addEvent = new AddShapeEvent(bShape, length === index);
-            this.addEvents(removeEvent);
-            this.addEvents(addEvent);
+            addEvent["clientId"] = removeEvent["clientId"] = getCookie();
+            addEvent["canvasId"] = removeEvent["canvasId"] = this.canvasId;
+            wSend(ws, "saveEvent", JSON.stringify(removeEvent));
+            wSend(ws, "saveEvent", JSON.stringify(addEvent));
+
+            // this.addEvents(removeEvent);
+            // this.addEvents(addEvent);
             index += 1;
         }
     }
@@ -505,6 +605,15 @@ export class Canvas implements ShapeManagerEventBased {
                 break;
             case "chooseShape":
                 event = new ChooseShapeAtEvent(e.data.x, e.data.y, e.data.selected, e.data.toSelect);
+                break;
+            case "changeColor":
+                event = new ChangeColorEvent(e.data.selectedShapes, e.data.color, e.data.background);
+                break;
+            case "changeShapeStatus":
+                event = new ChangeShapeStatusEvent(e.data.shapes, e.data.x, e.data.y, e.data.select);
+                break;
+            case "zOder":
+                event = new ZOderEvent(e.data.shapes, e.data.plus);
                 break;
             default:
                 console.log("This event is not yet handled")
@@ -539,6 +648,7 @@ export class Canvas implements ShapeManagerEventBased {
         this.state = [];
         this.shapes = {};
         this.events = [];
+        this.deselect = false;
         this.selectShapes = [];
         this.textAreaEvent.value = "";
         this.eventTextField.value = "";

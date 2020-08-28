@@ -267,9 +267,9 @@ class Rectangle extends AbstractShape implements Shape {
     zOrder: number;
     bdColor: string;
     bgColor: string;
+    clientId: number;
     selected: boolean;
     label = "Rectangle";
-    clientId: number;
 
     constructor(readonly from: Point2D, readonly to: Point2D, id?: number, clientId?: number) {
         super(id);
@@ -565,6 +565,7 @@ export class ChooseShape implements ShapeFactory {
             let diff = this.distance(this.from, this.tmpTo);
             for (let id of Object.keys(this.movableShape)) {
                 let shape = this.createShape(diff.dx, diff.dy, this.movableShape[id]);
+                // let shape = this.createShape(diff.dx, diff.dy, this.movableShape[id], +id);
                 this.tmpMovableShape[shape.id] = shape;
                 this.shapeManager.removeShapeWithId(+id, false, true);
                 this.shapeManager.addShape(shape, false, true);

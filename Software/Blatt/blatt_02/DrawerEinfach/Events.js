@@ -1,4 +1,3 @@
-export { AddShapeEvent, RemoveShapeWithIdEvent, SelectShapeEvent, UnselectShapeEvent, ChooseShapeAtEvent };
 class AddShapeEvent {
     constructor(e, redraw, move) {
         this.type = "addShape";
@@ -22,7 +21,6 @@ class RemoveShapeWithIdEvent {
         this.data["shapeId"] = shapeId;
         this.data["fromButton"] = fromButton;
     }
-
     info() {
         let infos = {};
         infos["event"] = this.type;
@@ -30,18 +28,6 @@ class RemoveShapeWithIdEvent {
         return infos;
     }
 }
-
-class ChangeColor {
-    constructor() {
-        this.type = "ChangeColor";
-        this.data = {};
-    }
-
-    info() {
-        return {};
-    }
-}
-
 class ChooseShapeAtEvent {
     constructor(x, y, selected = false, toSelect) {
         this.type = "chooseShape";
@@ -51,7 +37,6 @@ class ChooseShapeAtEvent {
         this.data["toSelect"] = toSelect;
         this.data["selected"] = selected;
     }
-
     info() {
         let infos = {};
         infos["event"] = this.type;
@@ -78,6 +63,7 @@ class SelectShapeEvent {
         this.data = {};
         this.data["shape"] = e;
     }
+
     info() {
         let infos = {};
         infos["event"] = this.type;
@@ -85,4 +71,66 @@ class SelectShapeEvent {
         return infos;
     }
 }
+
+class ChangeColorEvent {
+    constructor(selectedShapes, color, background = false) {
+        this.type = "changeColor";
+        this.data = {};
+        this.data["color"] = color;
+        this.data["background"] = background;
+        this.data["selectedShapes"] = selectedShapes;
+    }
+
+    info() {
+        let infos = {};
+        infos["event"] = this.type;
+        infos["data"] = this.data;
+        return infos;
+    }
+}
+
+class ChangeShapeStatusEvent {
+    constructor(shapes, x, y, select) {
+        this.type = "changeShapeStatus";
+        this.data = {};
+        this.data["x"] = x;
+        this.data["y"] = y;
+        this.data["select"] = select;
+        this.data["shapes"] = shapes;
+    }
+
+    info() {
+        let infos = {};
+        infos["event"] = this.type;
+        infos["data"] = this.data;
+        return infos;
+    }
+}
+
+class ZOderEvent {
+    constructor(shapes, plus) {
+        this.type = "zOder";
+        this.data = {};
+        this.data["plus"] = plus;
+        this.data["shapes"] = shapes;
+    }
+
+    info() {
+        let infos = {};
+        infos["event"] = this.type;
+        infos["data"] = this.data;
+        return infos;
+    }
+}
+
+export {
+    ZOderEvent,
+    AddShapeEvent,
+    SelectShapeEvent,
+    ChangeColorEvent,
+    UnselectShapeEvent,
+    ChooseShapeAtEvent,
+    RemoveShapeWithIdEvent,
+    ChangeShapeStatusEvent
+};
 //# sourceMappingURL=Events.js.map

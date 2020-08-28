@@ -6,14 +6,175 @@
     <script src="./home.js" type="module"></script>
 
 </head>
+<script>
+    let lastCanvasId = "";
+
+    const ws = new WebSocket('ws://localhost:8888');
+    const wSend = (ws, event, message = null) => {
+        const toSend = event + '@{"content":' + message + '}';
+        ws.send(toSend);
+    };
+
+    const getCookie = () => {
+        var name = "this_is_an_app_for_drawing" + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    };
+
+    function loadFile(path, type) {
+        let fileref;
+        if (type === "js") {
+            fileref = document.createElement('script');
+            fileref.setAttribute("type", "module");
+            fileref.setAttribute("src", path);
+        } else if (type === "css") {
+            fileref = document.createElement("link");
+            fileref.setAttribute("rel", "stylesheet");
+            fileref.setAttribute("type", "text/css");
+            fileref.setAttribute("href", path);
+        }
+        document.getElementById("drawCanvas").appendChild(fileref);
+    }
+
+    window.onpopstate = function (event) {
+        console.log("popstate ");
+        if (document.location.pathname === "/") {
+            wSend(ws, "unregisterForCanvas", JSON.stringify({
+                    "clientId": getCookie(),
+                    "canvasId": lastCanvasId
+                })
+            );
+            document.getElementById("home").style.display = "block";
+            document.getElementById("drawCanvas").style.display = "none";
+            window.history.pushState('', 'Title', '/');
+            document.title = "Home";
+            console.log("wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
+        } else {
+
+            document.getElementById("home").style.display = "none";
+            document.getElementById("drawCanvas").style.display = "block";
+            console.log("ffffffffffffffffffff")
+        }
+    }
+    previousUrl = document.location.href;
+    console.log("previousUrl", previousUrl);
+    console.log("cookiee", getCookie());
+    window.onload = function (event) {
+        console.log("Page loaded first time");
+        console.log(document.location.href);
+
+        if (document.location.pathname === "/") {
+            document.getElementById("home").style.display = "block";
+            document.getElementById("drawCanvas").style.display = "none";
+            console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        } else {
+            document.getElementById("home").style.display = "none";
+            document.getElementById("drawCanvas").style.display = "block";
+            loadFile('types.js', 'js');
+            loadFile('Shapes.js', 'js');
+            loadFile('ToolArea.js', 'js');
+            loadFile('Canvas.js', 'js');
+            loadFile('init.js', 'js');
+            loadFile('script.js', 'js');
+            loadFile('ClientGenerator.js', 'js');
+            console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+
+        }
+    }
+
+    // function toHome() {
+    //     // console.log("Unregister the canvas " + window.location.pathname.split("/")[2]);
+    //     wSend(ws, "unregisterForCanvas", JSON.stringify(
+    //         {
+    //             "clientId": getCookie("canvas_draw_client_id"),
+    //             "canvasId": window.location.pathname.split("/")[2],
+    //         }));
+    //     document.getElementById("home").style.display = "block";
+    //     document.getElementById("app").style.display = "none";
+    //     window.history.pushState('', 'Title', '/');
+    //     document.title ="Home";
+    //
+    // }
+
+    function launch(datahref) {
+        console.log("[+] datahref : ", datahref);
+        lastCanvasId = datahref.split("/")[2];
+        // loadCanvas(datahref);
+        wSend(ws, "registerForCanvas", JSON.stringify({
+                "clientId": getCookie(),
+                "canvasId": lastCanvasId
+            })
+        );
+        document.getElementById("home").style.display = "none";
+        document.getElementById("drawCanvas").style.display = "block";
+
+        loadFile('types.js', 'js');
+        loadFile('Shapes.js', 'js');
+        loadFile('ToolArea.js', 'js');
+        loadFile('Canvas.js', 'js');
+        loadFile('init.js', 'js');
+        loadFile('script.js', 'js');
+        loadFile('ClientGenerator.js', 'js');
+
+        window.history.pushState('', 'Title', datahref);
+        document.title = "Zeichenprogramm";
+
+        console.log(window.history);
+        console.log("history")
+    }
+
+
+</script>
 
 <body>
+<div id="home">
+    <h1 style="text-align: center" id="hello"> Herzliches Willkommen in Draw-APP </h1>
 
-<h1 style="text-align: center" id="hello"> Herzliches Willkommen in Draw-APP </h1>
+    <div id="canvas_list"></div>
 
-<div id="canvas_list"></div>
+    <button id="new_canvas">New canvas</button>
+</div>
 
-<button id="new_canvas">New canvas</button>
+<div id="drawCanvas" hidden>
+    <link rel="stylesheet" href="style.css" type="text/css"/>
+    <h1 style="text-align: center" id="helloI"> Herzliches Willkommen in Draw-APP </h1>
+    <p>Wählen Sie auf der linken Seite Ihr Zeichwerkzeug aus.
+        Haben Sie eines ausgewählt, können Sie mit der Maus
+        die entsprechenden Figuren zeichen. Typischerweise, indem
+        Sie die Maus drücken, dann mit gedrückter Maustaste die
+        Form bestimmen, und dann anschließend die Maustaste loslassen.
+    </p>
+
+
+    <ul class="tools"></ul>
+
+    <!--<canvas id="drawArea" width="900" height="800"></canvas>-->
+    <canvas id="drawArea" width="500" height="500"></canvas>
+    <textarea id="events" rows="31" cols="70"></textarea>
+    <br><br>
+    <form>
+        <label for="event">Aktuelles Ereignis:</label>
+        <input type="text" id="event" size="75" style="text-align: center"/>
+    </form>
+    <button id="loadButton" type="button">Load Events</button>
+    <button id="clearButton" type="button">clear canvas</button>
+
+
+    <p id="demo">' '</p>
+    <pre id="console"></pre>
+    <ol id="pointList"></ol>
+
+</div>
 
 </body>
 </html>

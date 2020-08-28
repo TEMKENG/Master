@@ -453,6 +453,7 @@ export class ChooseShape {
             let diff = this.distance(this.from, this.tmpTo);
             for (let id of Object.keys(this.movableShape)) {
                 let shape = this.createShape(diff.dx, diff.dy, this.movableShape[id]);
+                // let shape = this.createShape(diff.dx, diff.dy, this.movableShape[id], +id);
                 this.tmpMovableShape[shape.id] = shape;
                 this.shapeManager.removeShapeWithId(+id, false, true);
                 this.shapeManager.addShape(shape, false, true);

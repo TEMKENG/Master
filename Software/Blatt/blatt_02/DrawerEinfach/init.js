@@ -6,10 +6,14 @@ import { getCookie, wGetContent, wGetRun, wSend } from "./Utils.js";
 import { AddShapeEvent, RemoveShapeWithIdEvent, ChooseShapeAtEvent } from "./Events.js";
 import { CircleFactory, LineFactory, RectangleFactory, TriangleFactory, ChooseShape } from "./Shapes.js";
 // let ws = new WebSocket('ws://localhost:8080');
-let ws = new WebSocket('ws://localhost:8888');
+export const ws = new WebSocket('ws://localhost:8888');
 let canvas;
 const menu = document.getElementsByClassName("tools");
 const canvasDomElm = document.getElementById("drawArea");
+window.addEventListener('popstate', function (event) {
+    // Log the state data to the console
+    console.log(event.state);
+});
 function init() {
     // Problem here: Factories needs a way to create new Shapes, so they
     // have to call a method of the canvas.
@@ -26,7 +30,7 @@ function init() {
             event["clientId"] = getCookie();
             event["canvasId"] = window.location.pathname.split("/")[2];
             if (mv) {
-                wSend(ws, "saveEvent", JSON.stringify(event));
+                // wSend(ws, "saveEvent", JSON.stringify(event));
             }
             else {
                 wSend(ws, "saveEvent", JSON.stringify(event));
@@ -49,16 +53,18 @@ function init() {
                 // console.log("ohh les problemes hein!!!", event);
                 wSend(ws, "saveEvent", JSON.stringify(event));
             }
+            // wSend(ws, "saveEvent", JSON.stringify(event));
             return canvas.apply(event);
         },
         chooseShapeAt(x, y, selected, toSelect) {
             event = new ChooseShapeAtEvent(x, y, selected, toSelect);
             event["clientId"] = getCookie();
             event["canvasId"] = window.location.pathname.split("/")[2];
-            if (selected === true) {
-                wSend(ws, "saveEvent", JSON.stringify(event));
-                // console.log(event)
-            }
+            // if (selected === true) {
+            //     wSend(ws, "saveEvent", JSON.stringify(event));
+            //     // console.log(event)
+            // }
+            // wSend(ws, "saveEvent", JSON.stringify(event));
             return canvas.apply(event);
         }
     };
@@ -85,22 +91,59 @@ ws.onmessage = (ev) => {
         }
     });
 };
+let precedentShapeEvents = [];
+// event emmited when receiving message
+// ws.onmessage = (ev) => {
+//
+//     wGetRun("drawShape", ev.data, () => {
+//         let shapeEvents = wGetContent(ev.data);
+//
+//         // canvas["shapes"] = {};
+//         // canvas["ctx"].clearRect(0, 0, canvas["width"], canvas["height"]);
+//         // canvas.draw();
+//         let reinit;
+//         shapeEvents.forEach(elt => {
+//             let canvasId = elt["canvasId"];
+//             let clientId = elt["clientId"];
+//             if (typeof elt.data.shape !== "undefined") {
+//                 let eltShape = JSON.stringify(elt);
+//
+//                 if (canvasId === window.location.pathname.split("/")[2] &&
+//                     clientId !== getCookie() &&
+//                     precedentShapeEvents.indexOf(eltShape) < 0) {
+//
+//                     // console.log(">> elt: ", elt);
+//                     reinit = canvas.createEvent(elt, false);
+//                     precedentShapeEvents.push(eltShape);
+//                 }
+//             }
+//         });
+//         if (precedentShapeEvents.length > 0) {
+//             console.log("Nachrichten from anderen: ", precedentShapeEvents.length);
+//             console.log(precedentShapeEvents, " N ", shapeEvents);
+//         }
+//         if (shapeEvents.length > 0) {
+//             // let elt = shapeEvents[shapeEvents.length - 1];
+//             try {
+//                 if (!!reinit) {
+//                     canvas.apply(reinit);
+//                 }
+//             } catch (err) {
+//                 console.log(err)
+//             }
+//         }
+//     });
+// };
 // init();
 ws.onopen = () => {
     // it's only when a valid clientId i set up that the
     init();
     setInterval(() => {
         const canvasId = window.location.pathname.split("/")[2];
-        wSend(ws, "refreshShape", JSON.stringify({ "canvasId": canvasId }));
+        wSend(ws, "refreshShape", JSON.stringify({"canvasId": canvasId}));
     }, 1500);
     // newClient();
     console.log("Le cookie :" + getCookie());
     // console.log("Les clients:" + clientIds);
 };
-// const newClient = () => {
-//     wSend(ws, "newClient", JSON.stringify({
-//             "clientId": getCookie()
-//         })
-//     );
-// };
 //# sourceMappingURL=init.js.map
